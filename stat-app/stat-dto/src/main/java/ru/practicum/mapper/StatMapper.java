@@ -12,14 +12,14 @@ public class StatMapper {
         return new Stat(id, statDto.getApp(), statDto.getUri(), statDto.getIp(), datetime);
     }
 
-    public static StatDto StatToStatDto(Stat stat) {
+    public static StatDto statToStatDto(Stat stat) {
         return new StatDto(stat.getApp(), stat.getUri(), stat.getIp());
     }
 
-    public static List<StatDto> StatsToStatsDto(Iterable<Stat> stats) {
+    public static List<StatDto> statsToStatsDto(Iterable<Stat> stats) {
         List<StatDto> statsDto = new ArrayList<>();
         for (Stat stat : stats) {
-            statsDto.add(StatToStatDto(stat));
+            statsDto.add(statToStatDto(stat));
         }
         return statsDto;
     }
