@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StatServiceImpl implements StatService {
     @Autowired
-    StatRepository statRepository;
+    private final StatRepository statRepository;
 
     @Override
     public void create(StatDto statDto) {
@@ -27,9 +27,9 @@ public class StatServiceImpl implements StatService {
     public List<ViewStats> get(Date start, Date end, List<String> uris, Boolean unique) {
 
         if (unique) {
-            return statRepository.searchUnique(start, end, uris == null ? new ArrayList<String>() : uris);
+            return statRepository.searchUnique(start, end, uris == null ? new ArrayList<>() : uris);
         } else {
-            return statRepository.search(start, end, uris == null ? new ArrayList<String>() : uris);
+            return statRepository.search(start, end, uris == null ? new ArrayList<>() : uris);
         }
     }
 }

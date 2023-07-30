@@ -32,11 +32,7 @@ public class StatClient extends BaseClient {
         return get(API_PREFIX_STATS, parameters);
     }
 
-    ;
-
     public ResponseEntity<Object> postStats(StatDto statDto) {
         return post(API_PREFIX_HIT, statDto);
     }
-
-    ;
 }
