@@ -47,7 +47,7 @@ public class RequestServiceImpl implements RequestService {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException(
                 "Event with id=" + eventId + " was not found", "The required object was not found."));
 
-        if (user.getId() == event.getInitiator().getId()) {
+        if (user.getId().equals(event.getInitiator().getId())) {
             throw new ConflictException("Incorrectly made request.", "Request must not be made by initiator");
         }
         if (!event.getState().equals(EventState.PUBLISHED)) {

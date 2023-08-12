@@ -131,7 +131,7 @@ public class EventServiceImpl implements EventService {
     public EventFullDto get(Long userId, Long eventId) throws ParseException {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id=" + userId + " was not found", "The required object was not found."));
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found", "The required object was not found."));
-        if (event.getInitiator().getId() != user.getId()) {
+        if (!event.getInitiator().getId().equals(user.getId())) {
             throw new NotFoundException("Event with id=" + eventId + " was not found", "The required object was not found.");
         }
         Integer views = (Integer) statClient.getCount("/events/" + eventId).getBody();
