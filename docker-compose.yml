@@ -37,7 +37,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DATASOURCE_URL=jdbc:postgresql://ewm-db:6541/mainDB
-      - STATE_SERVER = //ewm-db:9090
+      - STATE_SERVER=//ewm-db:9090
     restart: unless-stopped
 
   ewm-db:
