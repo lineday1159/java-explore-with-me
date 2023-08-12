@@ -25,11 +25,18 @@ public class StatServiceImpl implements StatService {
 
     @Override
     public List<ViewStats> get(Date start, Date end, List<String> uris, Boolean unique) {
-
+        if (end.before(start)) {
+            throw new RuntimeException("start date must be before end date");
+        }
         if (unique) {
             return statRepository.searchUnique(start, end, uris == null ? new ArrayList<>() : uris);
         } else {
             return statRepository.search(start, end, uris == null ? new ArrayList<>() : uris);
         }
+    }
+
+    @Override
+    public Integer getCount(String uri) {
+        return statRepository.getCount(uri);
     }
 }

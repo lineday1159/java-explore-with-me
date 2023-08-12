@@ -1,9 +1,10 @@
-package ru.practicum.stats.controller;
+package ru.practicum.stats;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.StatDto;
@@ -23,6 +24,7 @@ public class StatController {
     private final StatService statService;
 
     @PostMapping("/hit")
+    @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody @Valid StatDto statDto) {
         statService.create(statDto);
     }
@@ -33,5 +35,11 @@ public class StatController {
                                @RequestParam(required = false) List<String> uris,
                                @RequestParam(defaultValue = "false") Boolean unique) {
         return statService.get(start, end, uris, unique);
+    }
+
+    @GetMapping("/statsCount")
+    public Integer getCount(@RequestParam(name = "eventUri") String eventUri) {
+        log.info("Get запрос на получение кол-во уникальных запросов по -{}", eventUri);
+        return statService.getCount(eventUri);
     }
 }

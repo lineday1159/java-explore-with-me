@@ -27,4 +27,9 @@ public interface StatRepository extends JpaRepository<Stat, Long> {
             "order by hits desc", nativeQuery = true)
     List<ViewStats> searchUnique(Date start, Date end, List<String> uris);
 
+    @Query(value = "select count(*) " +
+            "from (Select distinct s.ip from statistics s " +
+            "where s.uri = ?1) as st ", nativeQuery = true)
+    Integer getCount(String uri);
+
 }
