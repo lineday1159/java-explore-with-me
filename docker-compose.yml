@@ -13,9 +13,9 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
-  stats-service:
+  stats-server:
     build: stat-app/stat-server
-    container_name: stats
+    container_name: stats-server
     depends_on:
       - stats-db
     ports:
@@ -29,10 +29,10 @@ services:
 
   ewm-service:
     build: main-app
-    container_name: ewm
+    container_name: ewm-service
     depends_on:
       - ewm-db
-      - stats
+      - stats-server
     ports:
       - "8080:8080"
     environment:
@@ -40,7 +40,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DATASOURCE_URL=jdbc:postgresql://ewm-db:6541/mainDB
-      - STATE_SERVER=//stats:9090
+      - STATE_SERVER=//stats-server:9090
     restart: unless-stopped
 
   ewm-db:
