@@ -17,7 +17,6 @@ public class StatClient extends BaseClient {
     private static final String API_PREFIX_HIT = "/hit";
     private static final String API_PREFIX_STATS = "/stats";
     private static final String API_PREFIX_STATS_COUNT = "/statsCount";
-    private static final String SERVER_URL = "http://localhost:9090";
 
     public StatClient(@Value("${state-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(builder
