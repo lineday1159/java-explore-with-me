@@ -30,6 +30,7 @@ public class CompilationServiceImpl implements CompilationService {
     private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
     private final StatClient statClient;
+
     @Override
     @Transactional
     public CompilationDto save(NewCompilationDto newCompilationDto) {
@@ -129,14 +130,15 @@ public class CompilationServiceImpl implements CompilationService {
                 .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found",
                         "The required object was not found."));
         CompilationDto compilationDto = CompilationMapper.compilationToCompilationDto(compilation, new ArrayList<>());
-        List<EventShortDto> eventShortDtoList = eventRepository.findAllByCompilationId(compId).stream().map(event -> {
-            try {
-                Integer views = (Integer) statClient.getCount("/events/" + event.getId()).getBody();
-                return EventMapper.eventToEventShortDto(event, views);
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
-        }).collect(Collectors.toList());
+        List<EventShortDto> eventShortDtoList = eventRepository.findAllByCompilationId(compId).stream()
+                .map(event -> {
+                    try {
+                        Integer views = (Integer) statClient.getCount("/events/" + event.getId()).getBody();
+                        return EventMapper.eventToEventShortDto(event, views);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).collect(Collectors.toList());
         compilationDto.setEvents(eventShortDtoList);
 
         return compilationDto;

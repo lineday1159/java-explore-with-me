@@ -68,8 +68,8 @@ public class CategoryServiceImpl implements CategoryService {
                         "Category with id=" + id + " was not found",
                         "The required object was not found."));
         if (!eventRepository.findAllByCategoryId(id).isEmpty()) {
-            throw new ConflictException("Category with id=" + id + " can not be deleted"
-                    , "there are some events that block deleting");
+            throw new ConflictException("Category with id=" + id + " can not be deleted",
+                    "there are some events that block deleting");
         }
         categoryRepository.deleteById(id);
     }

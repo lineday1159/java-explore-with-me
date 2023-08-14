@@ -47,8 +47,8 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
     private final RequestRepository requestRepository;
-    static private final String dateFormat = "yyyy-MM-dd HH:mm:ss";
-    static private final DateFormat dateFormatter = new SimpleDateFormat(dateFormat);
+    private static final String dateFormat = "yyyy-MM-dd HH:mm:ss";
+    private static final DateFormat dateFormatter = new SimpleDateFormat(dateFormat);
 
     @Override
     @Transactional
