@@ -1,9 +1,11 @@
 package ru.practicum.event.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 public class LocationDto {
     private float lat;

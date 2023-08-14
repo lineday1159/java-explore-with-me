@@ -1,12 +1,14 @@
 package ru.practicum.event.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import ru.practicum.request.dto.ParticipationRequestDto;
 
 import java.util.List;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 public class EventRequestStatusUpdateResult {
     private List<ParticipationRequestDto> confirmedRequests;

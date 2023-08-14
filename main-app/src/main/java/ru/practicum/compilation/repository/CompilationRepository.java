@@ -6,13 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.compilation.model.Compilation;
 
 import java.util.List;
 
-@Repository
 public interface CompilationRepository extends JpaRepository<Compilation, Long> {
     @Modifying
     @Transactional
@@ -38,9 +36,6 @@ public interface CompilationRepository extends JpaRepository<Compilation, Long> 
     void updateCompilationEvents(@Param("compilation_id") Long compilationId,
                                  @Param("events_list") List<Long> eventsId);
 
-    @Query("Select c " +
-            "From Compilation c " +
-            "Where (:pinned is null or c.pinned = :pinned)")
     Page<Compilation> findAllByPinned(@Param("pinned") Boolean pinned, Pageable pageable);
 
 

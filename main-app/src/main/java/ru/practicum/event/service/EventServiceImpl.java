@@ -2,7 +2,6 @@ package ru.practicum.event.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -42,20 +41,14 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
-    @Autowired
     private final EventRepository eventRepository;
-    @Autowired
     private final StatClient statClient;
-    @Autowired
     private final CategoryRepository categoryRepository;
-    @Autowired
     private final UserRepository userRepository;
-    @Autowired
     private final LocationRepository locationRepository;
-    @Autowired
     private final RequestRepository requestRepository;
-    private final String dateFormat = "yyyy-MM-dd HH:mm:ss";
-    private final DateFormat dateFormatter = new SimpleDateFormat(dateFormat);
+    static private final String dateFormat = "yyyy-MM-dd HH:mm:ss";
+    static private final DateFormat dateFormatter = new SimpleDateFormat(dateFormat);
 
     @Override
     @Transactional

@@ -1,12 +1,14 @@
 package ru.practicum.category.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 public class CategoryDto {
     private Long id;

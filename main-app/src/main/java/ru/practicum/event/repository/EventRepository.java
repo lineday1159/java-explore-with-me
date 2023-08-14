@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.EventState;
@@ -15,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
 
     Page<Event> findByInitiatorId(Long userID, Pageable pageable);
@@ -27,6 +25,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "Join compilation_event c on c.event_id = e.id " +
             "where c.compilation_id = :compilation_id", nativeQuery = true)
     List<Event> findAllByCompilationId(@Param("compilation_id") Long compilationId);
+
+    List<Event> findAllByCategoryId(Long categoryId);
 
     @Query("Select e " +
             "From Event e " +

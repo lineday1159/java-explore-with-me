@@ -2,8 +2,6 @@ package ru.practicum.category.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -15,6 +13,7 @@ import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
 import ru.practicum.error.ConflictException;
 import ru.practicum.error.NotFoundException;
+import ru.practicum.event.repository.EventRepository;
 
 import java.util.List;
 
@@ -22,8 +21,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class CategoryServiceImpl implements CategoryService {
-    @Autowired
     private final CategoryRepository categoryRepository;
+    private final EventRepository eventRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -46,11 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public CategoryDto save(CategoryDto categoryDto) {
         Category category = CategoryMapper.categoryDtoToCategory(categoryDto);
-        try {
-            return CategoryMapper.categoryToCategoryDto(categoryRepository.save(category));
-        } catch (DataIntegrityViolationException e) {
-            throw new ConflictException(e.getCause().getMessage(), e.getMessage());
-        }
+        return CategoryMapper.categoryToCategoryDto(categoryRepository.save(category));
     }
 
     @Override
@@ -61,24 +56,21 @@ public class CategoryServiceImpl implements CategoryService {
                         "Category with id=" + id + " was not found",
                         "The required object was not found."));
         category.setName(categoryDto.getName());
-        try {
-            categoryRepository.save(category);
-            return CategoryMapper.categoryToCategoryDto(category);
-        } catch (DataIntegrityViolationException e) {
-            throw new ConflictException(e.getCause().getMessage(), e.getMessage());
-        }
+        categoryRepository.save(category);
+        return CategoryMapper.categoryToCategoryDto(category);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(
                         "Category with id=" + id + " was not found",
                         "The required object was not found."));
-        try {
-            categoryRepository.deleteById(id);
-        } catch (DataIntegrityViolationException e) {
-            throw new ConflictException(e.getCause().getMessage(), e.getMessage());
+        if (!eventRepository.findAllByCategoryId(id).isEmpty()) {
+            throw new ConflictException("Category with id=" + id + " can not be deleted"
+                    , "there are some events that block deleting");
         }
+        categoryRepository.deleteById(id);
     }
 }

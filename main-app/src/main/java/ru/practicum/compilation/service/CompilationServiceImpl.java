@@ -1,7 +1,6 @@
 package ru.practicum.compilation.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -28,13 +27,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CompilationServiceImpl implements CompilationService {
-    @Autowired
     private final CompilationRepository compilationRepository;
-    @Autowired
     private final EventRepository eventRepository;
-    @Autowired
     private final StatClient statClient;
-
     @Override
     @Transactional
     public CompilationDto save(NewCompilationDto newCompilationDto) {

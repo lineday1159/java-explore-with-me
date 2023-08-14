@@ -1,7 +1,6 @@
 package ru.practicum.request.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.error.ConflictException;
@@ -24,11 +23,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class RequestServiceImpl implements RequestService {
-    @Autowired
     private final RequestRepository requestRepository;
-    @Autowired
     private final UserRepository userRepository;
-    @Autowired
     private final EventRepository eventRepository;
 
     @Override

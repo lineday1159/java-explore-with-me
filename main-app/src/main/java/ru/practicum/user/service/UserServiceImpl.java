@@ -1,15 +1,12 @@
 package ru.practicum.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.error.ConflictException;
 import ru.practicum.error.NotFoundException;
 import ru.practicum.user.dto.UserDto;
 import ru.practicum.user.mapper.UserMapper;
@@ -21,7 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    @Autowired
+
     private final UserRepository userRepository;
 
     @Override
@@ -41,12 +38,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto save(UserDto userDto) {
         User user = UserMapper.userDtoToUser(userDto);
-        try {
-            return UserMapper.userToUserDto(userRepository.save(user));
-        } catch (DataIntegrityViolationException e) {
-            throw new ConflictException(e.getMessage(), e.getLocalizedMessage());
-        }
-
+        return UserMapper.userToUserDto(userRepository.save(user));
     }
 
     @Override
