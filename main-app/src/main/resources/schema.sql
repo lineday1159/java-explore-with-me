@@ -45,6 +45,7 @@ create TABLE IF NOT EXISTS events (
   state VARCHAR(255) NOT NULL,
   request_moderation boolean,
   confirmed_requests INTEGER NOT NULL,
+  views INTEGER NOT NULL,
   CONSTRAINT pk_event PRIMARY KEY (id)
 );
 

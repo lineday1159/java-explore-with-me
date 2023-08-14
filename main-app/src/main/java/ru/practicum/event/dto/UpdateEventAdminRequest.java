@@ -3,12 +3,14 @@ package ru.practicum.event.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import ru.practicum.event.model.StateAction;
 
 import javax.validation.constraints.Size;
 
 @Setter
 @Getter
+@ToString
 @AllArgsConstructor
 public class UpdateEventAdminRequest {
     @Size(min = 3, max = 120)

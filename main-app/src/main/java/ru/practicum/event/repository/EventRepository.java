@@ -20,12 +20,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<Event> findAllByIdIn(List<Long> ids);
 
-    @Query(value = "Select e.* " +
-            "From Events e " +
-            "Join compilation_event c on c.event_id = e.id " +
-            "where c.compilation_id = :compilation_id", nativeQuery = true)
-    List<Event> findAllByCompilationId(@Param("compilation_id") Long compilationId);
-
     List<Event> findAllByCategoryId(Long categoryId);
 
     @Query("Select e " +
@@ -62,4 +56,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "where id = :event_id", nativeQuery = true)
     void updateConfirmedRequestsById(@Param("event_id") Long eventId,
                                      @Param("new_confirmed_requests") int confirmedRequests);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update events set views = :views " +
+            "where id = :event_id", nativeQuery = true)
+    void updateViewsById(@Param("event_id") Long eventId,
+                         @Param("views") long views);
 }

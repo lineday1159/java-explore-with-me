@@ -9,6 +9,7 @@ import java.util.Date;
 
 @Setter
 @Getter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

@@ -39,7 +39,7 @@ public class CompilationController {
     @PatchMapping("admin/compilations/{compId}")
     public CompilationDto patch(@PathVariable Long compId,
                                 @RequestBody @Valid UpdateCompilationRequest updateCompilationRequest) {
-        log.info("Patch запрос на изменение compilations - {}", compId);
+        log.info("Patch запрос на изменение compilations - {}, по id - {}", updateCompilationRequest, compId);
         return compilationService.patch(compId, updateCompilationRequest);
     }
 

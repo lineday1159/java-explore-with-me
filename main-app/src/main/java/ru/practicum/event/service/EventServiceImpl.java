@@ -65,7 +65,7 @@ public class EventServiceImpl implements EventService {
         }
         Location location = locationRepository.save(EventMapper.locationDtoToLocation(newEventDto.getLocation()));
         Event event = eventRepository.save(EventMapper.newEventDtoToEvent(user, newEventDto, location, category));
-        return EventMapper.eventToEventFullDto(event, 0);
+        return EventMapper.eventToEventFullDto(event);
     }
 
     @Override
@@ -89,9 +89,7 @@ public class EventServiceImpl implements EventService {
         }
         Event newEvent = EventMapper.updateEventToEvent(event, updateEventUserRequest, category);
 
-        Integer views = (Integer) statClient.getCount("/events/" + eventId).getBody();
-
-        return EventMapper.eventToEventFullDto(eventRepository.save(newEvent), views);
+        return EventMapper.eventToEventFullDto(eventRepository.save(newEvent));
     }
 
     @Override
@@ -114,9 +112,7 @@ public class EventServiceImpl implements EventService {
         }
         Event newEvent = EventMapper.updateEventAdminToEvent(event, updateEventAdminRequest, category);
 
-        Integer views = (Integer) statClient.getCount("/events/" + eventId).getBody();
-
-        return EventMapper.eventToEventFullDto(eventRepository.save(newEvent), views);
+        return EventMapper.eventToEventFullDto(eventRepository.save(newEvent));
     }
 
     @Override
@@ -127,20 +123,24 @@ public class EventServiceImpl implements EventService {
         if (!event.getInitiator().getId().equals(user.getId())) {
             throw new NotFoundException("Event with id=" + eventId + " was not found", "The required object was not found.");
         }
-        Integer views = (Integer) statClient.getCount("/events/" + eventId).getBody();
 
-        return EventMapper.eventToEventFullDto(event, views);
+        return EventMapper.eventToEventFullDto(event);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public EventFullDto getByPublic(Long eventId) throws ParseException {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found", "The required object was not found."));
         if (!event.getState().equals(EventState.PUBLISHED)) {
             throw new NotFoundException("Event with id=" + eventId + " was not found", "The required object was not found.");
         }
         Integer views = (Integer) statClient.getCount("/events/" + eventId).getBody();
-        return EventMapper.eventToEventFullDto(event, views);
+        if (!views.equals(event.getViews())) {
+            eventRepository.updateViewsById(eventId, views);
+            event.setViews(views);
+        }
+
+        return EventMapper.eventToEventFullDto(event);
     }
 
     @Override
@@ -155,8 +155,7 @@ public class EventServiceImpl implements EventService {
                 .stream()
                 .map(event -> {
                     try {
-                        Integer views = (Integer) statClient.getCount("/events/" + event.getId()).getBody();
-                        return EventMapper.eventToEventShortDto(event, views);
+                        return EventMapper.eventToEventShortDto(event);
                     } catch (ParseException e) {
                         throw new RuntimeException(e);
                     }
@@ -169,7 +168,7 @@ public class EventServiceImpl implements EventService {
     public List<EventFullDto> getListByAdmin(List<Long> users, List<EventState> states, List<Long> categories, String rangeEnd, String rangeStart, int from, int size) throws ParseException {
         Optional<Date> startDate = rangeEnd != null ? Optional.ofNullable(dateFormatter.parse(rangeStart)) : Optional.empty();
         Optional<Date> endDate = rangeEnd != null ? Optional.ofNullable(dateFormatter.parse(rangeEnd)) : Optional.empty();
-        log.info(startDate.toString() + "  " + endDate.toString());
+        log.info(startDate + "  " + endDate);
         if (startDate.isPresent() && endDate.isPresent()) {
             if (startDate.get().after(endDate.get())) {
                 throw new BadRequestException("Start date must be before end date",
@@ -187,8 +186,7 @@ public class EventServiceImpl implements EventService {
                 pageable).stream().map(
                 event -> {
                     try {
-                        Integer views = (Integer) statClient.getCount("/events/" + event.getId()).getBody();
-                        return EventMapper.eventToEventFullDto(event, views);
+                        return EventMapper.eventToEventFullDto(event);
                     } catch (ParseException e) {
                         throw new RuntimeException(e);
                     }
@@ -213,8 +211,7 @@ public class EventServiceImpl implements EventService {
                 startDate, endDate, pageable).stream().map(
                 event -> {
                     try {
-                        Integer views = (Integer) statClient.getCount("/events/" + event.getId()).getBody();
-                        return EventMapper.eventToEventShortDto(event, views);
+                        return EventMapper.eventToEventShortDto(event);
                     } catch (ParseException e) {
                         throw new RuntimeException(e);
                     }
@@ -235,7 +232,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public EventRequestStatusUpdateResult patchRequest(Long userId, Long eventId, EventRequestStatusUpdateRequest requestUpdate) throws ParseException {
+    public EventRequestStatusUpdateResult patchRequest(Long userId, Long eventId, EventRequestStatusUpdateRequest requestUpdate) {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException(
                 "Event with id=" + eventId + " was not found", "The required object was not found."));
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(

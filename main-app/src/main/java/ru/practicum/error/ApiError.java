@@ -1,10 +1,14 @@
 package ru.practicum.error;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
-@Data
+@Setter
+@Getter
+@ToString
 public class ApiError {
     private final StackTraceElement[] errors;
     private final String message;

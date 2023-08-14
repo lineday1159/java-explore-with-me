@@ -14,12 +14,9 @@ import ru.practicum.compilation.mapper.CompilationMapper;
 import ru.practicum.compilation.model.Compilation;
 import ru.practicum.compilation.repository.CompilationRepository;
 import ru.practicum.error.NotFoundException;
-import ru.practicum.event.dto.EventShortDto;
-import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,28 +26,16 @@ import java.util.stream.Collectors;
 public class CompilationServiceImpl implements CompilationService {
     private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
-    private final StatClient statClient;
 
     @Override
     @Transactional
     public CompilationDto save(NewCompilationDto newCompilationDto) {
-        Compilation compilation = compilationRepository.save(CompilationMapper.newCompilationDtoToCompilation(newCompilationDto));
-        CompilationDto compilationDto = CompilationMapper.compilationToCompilationDto(compilation, new ArrayList<>());
-        if (newCompilationDto.getEvents() != null) {
-            if (newCompilationDto.getEvents().size() != 0) {
-                compilationRepository.saveCompilationEvents(compilation.getId(), newCompilationDto.getEvents());
-                compilationDto.setEvents(eventRepository.findAllByIdIn(newCompilationDto.getEvents())
-                        .stream().map(event -> {
-                            try {
-                                Integer views = (Integer) statClient.getCount("/events/" + event.getId()).getBody();
-                                return EventMapper.eventToEventShortDto(event, views);
-                            } catch (ParseException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }).collect(Collectors.toList()));
-            }
-        }
-        return compilationDto;
+        List<Event> eventList = newCompilationDto.getEvents() == null ?
+                new ArrayList<>() : eventRepository.findAllByIdIn(newCompilationDto.getEvents());
+        Compilation compilation = compilationRepository.save(CompilationMapper
+                .newCompilationDtoToCompilation(newCompilationDto, eventList));
+
+        return CompilationMapper.compilationToCompilationDto(compilation);
     }
 
     @Override
@@ -75,27 +60,13 @@ public class CompilationServiceImpl implements CompilationService {
         if (updateCompilationRequest.getPinned() != null) {
             compilation.setPinned(updateCompilationRequest.getPinned());
         }
-        compilation = compilationRepository.save(compilation);
-        CompilationDto compilationDto = CompilationMapper.compilationToCompilationDto(compilation, new ArrayList<>());
         List<Event> eventList = new ArrayList<>();
         if (updateCompilationRequest.getEvents() != null) {
-            compilationRepository.deleteCompilationEventsExcludingEventIds(compId, updateCompilationRequest.getEvents());
-            compilationRepository.updateCompilationEvents(compId, updateCompilationRequest.getEvents());
-            if (updateCompilationRequest.getEvents().size() != 0) {
-                eventList = eventRepository.findAllByIdIn(updateCompilationRequest.getEvents());
-
-            }
-        } else {
-            eventList = eventRepository.findAllByCompilationId(compId);
+            eventList = eventRepository.findAllByIdIn(updateCompilationRequest.getEvents());
+            compilation.setEvents(eventList);
         }
-        compilationDto.setEvents(eventList.stream().map(event -> {
-            try {
-                Integer views = (Integer) statClient.getCount("/events/" + event.getId()).getBody();
-                return EventMapper.eventToEventShortDto(event, views);
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
-        }).collect(Collectors.toList()));
+        compilation = compilationRepository.save(compilation);
+        CompilationDto compilationDto = CompilationMapper.compilationToCompilationDto(compilation);
 
         return compilationDto;
     }
@@ -106,20 +77,9 @@ public class CompilationServiceImpl implements CompilationService {
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
 
         List<CompilationDto> compilationDtoList = compilationRepository.findAllByPinned(pinned, pageable).stream()
-                .map(compilation -> CompilationMapper.compilationToCompilationDto(compilation, new ArrayList<>()))
+                .map(compilation -> CompilationMapper.compilationToCompilationDto(compilation))
                 .collect(Collectors.toList());
 
-        for (CompilationDto compilationDto : compilationDtoList) {
-            compilationDto.setEvents(eventRepository.findAllByCompilationId(compilationDto.getId()).stream()
-                    .map(event -> {
-                        try {
-                            Integer views = (Integer) statClient.getCount("/events/" + event.getId()).getBody();
-                            return EventMapper.eventToEventShortDto(event, views);
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }).collect(Collectors.toList()));
-        }
         return compilationDtoList;
     }
 
@@ -129,17 +89,7 @@ public class CompilationServiceImpl implements CompilationService {
         Compilation compilation = compilationRepository.findById(compId)
                 .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found",
                         "The required object was not found."));
-        CompilationDto compilationDto = CompilationMapper.compilationToCompilationDto(compilation, new ArrayList<>());
-        List<EventShortDto> eventShortDtoList = eventRepository.findAllByCompilationId(compId).stream()
-                .map(event -> {
-                    try {
-                        Integer views = (Integer) statClient.getCount("/events/" + event.getId()).getBody();
-                        return EventMapper.eventToEventShortDto(event, views);
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).collect(Collectors.toList());
-        compilationDto.setEvents(eventShortDtoList);
+        CompilationDto compilationDto = CompilationMapper.compilationToCompilationDto(compilation);
 
         return compilationDto;
     }

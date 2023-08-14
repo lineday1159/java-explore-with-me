@@ -3,12 +3,14 @@ package ru.practicum.event.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import ru.practicum.category.dto.CategoryDto;
 import ru.practicum.event.model.EventState;
 import ru.practicum.user.dto.UserShortDto;
 
 @Setter
 @Getter
+@ToString
 @AllArgsConstructor
 public class EventFullDto {
     private Long id;

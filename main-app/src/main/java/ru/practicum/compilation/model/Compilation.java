@@ -1,14 +1,14 @@
 package ru.practicum.compilation.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import ru.practicum.event.model.Event;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Setter
 @Getter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -21,4 +21,11 @@ public class Compilation {
     private String title;
     @Column(nullable = false)
     private Boolean pinned;
+    @ManyToMany
+    @JoinTable(
+            name = "compilation_event",
+            joinColumns = @JoinColumn(name = "compilation_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id")
+    )
+    List<Event> events;
 }

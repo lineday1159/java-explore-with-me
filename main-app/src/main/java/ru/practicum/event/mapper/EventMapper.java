@@ -36,10 +36,10 @@ public class EventMapper {
                 location, user, newEventDto.getPaid() != null ? newEventDto.getPaid() : false,
                 newEventDto.getParticipantLimit(),
                 newEventDto.getRequestModeration() != null ? newEventDto.getRequestModeration() : true,
-                EventState.PENDING, 0);
+                EventState.PENDING, 0, 0);
     }
 
-    public static EventFullDto eventToEventFullDto(Event event, Integer views) throws ParseException {
+    public static EventFullDto eventToEventFullDto(Event event) throws ParseException {
         CategoryDto categoryDto = CategoryMapper.categoryToCategoryDto(event.getCategory());
         UserShortDto userShortDto = UserMapper.userToUserShortDto(event.getInitiator());
         LocationDto locationDto = locationToLocationDto(event.getLocation());
@@ -48,15 +48,15 @@ public class EventMapper {
                 event.getPublishedOn() != null ? dateFormatter.format(event.getPublishedOn()) : null,
                 locationDto, event.isPaid(), event.getParticipantLimit(), event.isRequestModeration(),
                 event.getConfirmedRequests(), dateFormatter.format(event.getCreatedOn()), userShortDto,
-                event.getState(), views);
+                event.getState(), event.getViews());
     }
 
-    public static EventShortDto eventToEventShortDto(Event event, Integer views) throws ParseException {
+    public static EventShortDto eventToEventShortDto(Event event) throws ParseException {
         CategoryDto categoryDto = CategoryMapper.categoryToCategoryDto(event.getCategory());
         UserShortDto userShortDto = UserMapper.userToUserShortDto(event.getInitiator());
         return new EventShortDto(event.getId(), event.getTitle(), event.getAnnotation(),
                 categoryDto, dateFormatter.format(event.getEventDate()), event.isPaid(),
-                event.getConfirmedRequests(), userShortDto, views);
+                event.getConfirmedRequests(), userShortDto, event.getViews());
     }
 
     public static Event updateEventToEvent(Event oldEvent, UpdateEventUserRequest updateEvent, Category category) throws ParseException {
