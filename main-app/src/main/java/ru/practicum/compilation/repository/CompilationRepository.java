@@ -36,6 +36,9 @@ public interface CompilationRepository extends JpaRepository<Compilation, Long> 
     void updateCompilationEvents(@Param("compilation_id") Long compilationId,
                                  @Param("events_list") List<Long> eventsId);
 
+    @Query("Select c " +
+            "From Compilation c " +
+            "Where (:pinned is null or c.pinned = :pinned)")
     Page<Compilation> findAllByPinned(@Param("pinned") Boolean pinned, Pageable pageable);
 
 
