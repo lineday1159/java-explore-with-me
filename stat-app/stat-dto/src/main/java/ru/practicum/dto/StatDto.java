@@ -1,11 +1,15 @@
 package ru.practicum.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 
-@Data
+@Setter
+@Getter
+@ToString
 @AllArgsConstructor
 public class StatDto {
     @NotBlank

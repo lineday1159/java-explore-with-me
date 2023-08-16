@@ -10,4 +10,6 @@ public interface StatService {
     void create(StatDto statDto);
 
     List<ViewStats> get(Date start, Date end, List<String> uris, Boolean unique);
+
+    Long getCount(String uri);
 }
