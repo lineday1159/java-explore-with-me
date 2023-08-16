@@ -63,7 +63,7 @@ public class EventServiceImpl implements EventService {
         }
         Location location = locationRepository.save(EventMapper.locationDtoToLocation(newEventDto.getLocation()));
         Event event = eventRepository.save(EventMapper.newEventDtoToEvent(user, newEventDto, location, category));
-        return EventMapper.eventToEventFullDto(event, 0l);
+        return EventMapper.eventToEventFullDto(event, 0L);
     }
 
     @Override
@@ -291,7 +291,7 @@ public class EventServiceImpl implements EventService {
         List<Map<String, Object>> views = (List<Map<String, Object>>) statClient.getStats(startDate, endDate,
                 new String[]{eventUris}, true).getBody();
 
-        Long hits = views.isEmpty() ? 0l : Long.valueOf(views.get(0).get("hits").toString());
+        Long hits = views.isEmpty() ? 0L : Long.valueOf(views.get(0).get("hits").toString());
 
         return hits;
     }
