@@ -32,9 +32,6 @@ public class StatServiceImpl implements StatService {
             throw new RuntimeException("start date must be before end date");
         }
         if (unique) {
-            log.info(uris.toString() + " " + start + " " + end + " " + unique);
-            log.info(statRepository.searchUnique(start, end,
-                    uris == null ? new ArrayList<>() : uris).toString());
             return statRepository.searchUnique(start, end,
                     uris == null ? new ArrayList<>() : uris);
         } else {
