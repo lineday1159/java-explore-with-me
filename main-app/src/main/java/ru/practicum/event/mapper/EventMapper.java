@@ -15,7 +15,10 @@ import ru.practicum.user.model.User;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 public class EventMapper {
     private static final String dateFormat = "yyyy-MM-dd HH:mm:ss";
@@ -36,10 +39,10 @@ public class EventMapper {
                 location, user, newEventDto.getPaid() != null ? newEventDto.getPaid() : false,
                 newEventDto.getParticipantLimit(),
                 newEventDto.getRequestModeration() != null ? newEventDto.getRequestModeration() : true,
-                EventState.PENDING, 0, 0);
+                EventState.PENDING, 0);
     }
 
-    public static EventFullDto eventToEventFullDto(Event event) throws ParseException {
+    public static EventFullDto eventToEventFullDto(Event event, Long views) throws ParseException {
         CategoryDto categoryDto = CategoryMapper.categoryToCategoryDto(event.getCategory());
         UserShortDto userShortDto = UserMapper.userToUserShortDto(event.getInitiator());
         LocationDto locationDto = locationToLocationDto(event.getLocation());
@@ -48,15 +51,34 @@ public class EventMapper {
                 event.getPublishedOn() != null ? dateFormatter.format(event.getPublishedOn()) : null,
                 locationDto, event.isPaid(), event.getParticipantLimit(), event.isRequestModeration(),
                 event.getConfirmedRequests(), dateFormatter.format(event.getCreatedOn()), userShortDto,
-                event.getState(), event.getViews());
+                event.getState(), views);
     }
 
-    public static EventShortDto eventToEventShortDto(Event event) throws ParseException {
+    public static List<EventFullDto> eventsToEventsFullDto(Iterable<Event> events, HashMap<Long, Long> viewsMap) throws ParseException {
+        List<EventFullDto> eventFullDtoList = new ArrayList<>();
+        for (Event event : events) {
+            eventFullDtoList.add(eventToEventFullDto(event,
+                    viewsMap.get(event.getId()) == null ? 0 : viewsMap.get(event.getId())));
+        }
+        return eventFullDtoList;
+    }
+
+
+    public static EventShortDto eventToEventShortDto(Event event, Long views) throws ParseException {
         CategoryDto categoryDto = CategoryMapper.categoryToCategoryDto(event.getCategory());
         UserShortDto userShortDto = UserMapper.userToUserShortDto(event.getInitiator());
         return new EventShortDto(event.getId(), event.getTitle(), event.getAnnotation(),
                 categoryDto, dateFormatter.format(event.getEventDate()), event.isPaid(),
-                event.getConfirmedRequests(), userShortDto, event.getViews());
+                event.getConfirmedRequests(), userShortDto, views);
+    }
+
+    public static List<EventShortDto> eventsToEventsShortDto(Iterable<Event> events, HashMap<Long, Long> viewsMap) throws ParseException {
+        List<EventShortDto> eventShortDtoList = new ArrayList<>();
+        for (Event event : events) {
+            eventShortDtoList.add(eventToEventShortDto(event,
+                    viewsMap.get(event.getId()) == null ? 0 : viewsMap.get(event.getId())));
+        }
+        return eventShortDtoList;
     }
 
     public static Event updateEventToEvent(Event oldEvent, UpdateEventUserRequest updateEvent, Category category) throws ParseException {

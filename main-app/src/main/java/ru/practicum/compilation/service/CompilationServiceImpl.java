@@ -15,8 +15,11 @@ import ru.practicum.compilation.repository.CompilationRepository;
 import ru.practicum.error.NotFoundException;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
+import ru.practicum.event.service.EventService;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,16 +28,19 @@ import java.util.stream.Collectors;
 public class CompilationServiceImpl implements CompilationService {
     private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
+    private final EventService eventService;
 
     @Override
     @Transactional
-    public CompilationDto save(NewCompilationDto newCompilationDto) {
+    public CompilationDto save(NewCompilationDto newCompilationDto) throws ParseException {
         List<Event> eventList = newCompilationDto.getEvents() == null ?
                 new ArrayList<>() : eventRepository.findAllByIdIn(newCompilationDto.getEvents());
         Compilation compilation = compilationRepository.save(CompilationMapper
                 .newCompilationDtoToCompilation(newCompilationDto, eventList));
 
-        return CompilationMapper.compilationToCompilationDto(compilation);
+        HashMap<Long, Long> viewsMap = eventService.getViewsByEvents(compilation.getEvents());
+
+        return CompilationMapper.compilationToCompilationDto(compilation, viewsMap);
     }
 
     @Override
@@ -49,7 +55,7 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     @Transactional
-    public CompilationDto patch(Long compId, UpdateCompilationRequest updateCompilationRequest) {
+    public CompilationDto patch(Long compId, UpdateCompilationRequest updateCompilationRequest) throws ParseException {
         Compilation compilation = compilationRepository.findById(compId)
                 .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found",
                         "The required object was not found."));
@@ -65,7 +71,8 @@ public class CompilationServiceImpl implements CompilationService {
             compilation.setEvents(eventList);
         }
         compilation = compilationRepository.save(compilation);
-        CompilationDto compilationDto = CompilationMapper.compilationToCompilationDto(compilation);
+        HashMap<Long, Long> viewsMap = eventService.getViewsByEvents(compilation.getEvents());
+        CompilationDto compilationDto = CompilationMapper.compilationToCompilationDto(compilation, viewsMap);
 
         return compilationDto;
     }
@@ -76,7 +83,14 @@ public class CompilationServiceImpl implements CompilationService {
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
 
         List<CompilationDto> compilationDtoList = compilationRepository.findAllByPinned(pinned, pageable).stream()
-                .map(compilation -> CompilationMapper.compilationToCompilationDto(compilation))
+                .map(compilation -> {
+                    try {
+                        HashMap<Long, Long> viewsMap = eventService.getViewsByEvents(compilation.getEvents());
+                        return CompilationMapper.compilationToCompilationDto(compilation, viewsMap);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .collect(Collectors.toList());
 
         return compilationDtoList;
@@ -84,11 +98,12 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     @Transactional(readOnly = true)
-    public CompilationDto get(Long compId) {
+    public CompilationDto get(Long compId) throws ParseException {
         Compilation compilation = compilationRepository.findById(compId)
                 .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found",
                         "The required object was not found."));
-        CompilationDto compilationDto = CompilationMapper.compilationToCompilationDto(compilation);
+        HashMap<Long, Long> viewsMap = eventService.getViewsByEvents(compilation.getEvents());
+        CompilationDto compilationDto = CompilationMapper.compilationToCompilationDto(compilation, viewsMap);
 
         return compilationDto;
     }

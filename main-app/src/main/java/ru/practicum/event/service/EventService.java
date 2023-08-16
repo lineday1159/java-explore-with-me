@@ -1,10 +1,12 @@
 package ru.practicum.event.service;
 
 import ru.practicum.event.dto.*;
+import ru.practicum.event.model.Event;
 import ru.practicum.event.model.EventState;
 import ru.practicum.request.dto.ParticipationRequestDto;
 
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 
 public interface EventService {
@@ -29,4 +31,6 @@ public interface EventService {
 
     List<EventShortDto> getListByPublic(String text, List<Long> categories, Boolean paid, String rangeStart, String rangeEnd,
                                         Boolean onlyAvailable, String sort, int from, int size) throws ParseException;
+
+    public HashMap<Long, Long> getViewsByEvents(List<Event> events) throws ParseException;
 }

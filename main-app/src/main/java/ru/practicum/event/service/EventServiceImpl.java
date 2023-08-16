@@ -2,6 +2,7 @@ package ru.practicum.event.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,10 +32,7 @@ import ru.practicum.user.repository.UserRepository;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -65,7 +63,7 @@ public class EventServiceImpl implements EventService {
         }
         Location location = locationRepository.save(EventMapper.locationDtoToLocation(newEventDto.getLocation()));
         Event event = eventRepository.save(EventMapper.newEventDtoToEvent(user, newEventDto, location, category));
-        return EventMapper.eventToEventFullDto(event);
+        return EventMapper.eventToEventFullDto(event, 0l);
     }
 
     @Override
@@ -88,8 +86,7 @@ public class EventServiceImpl implements EventService {
             }
         }
         Event newEvent = EventMapper.updateEventToEvent(event, updateEventUserRequest, category);
-
-        return EventMapper.eventToEventFullDto(eventRepository.save(newEvent));
+        return EventMapper.eventToEventFullDto(eventRepository.save(newEvent), getViewByEvent(event));
     }
 
     @Override
@@ -112,7 +109,7 @@ public class EventServiceImpl implements EventService {
         }
         Event newEvent = EventMapper.updateEventAdminToEvent(event, updateEventAdminRequest, category);
 
-        return EventMapper.eventToEventFullDto(eventRepository.save(newEvent));
+        return EventMapper.eventToEventFullDto(eventRepository.save(newEvent), getViewByEvent(event));
     }
 
     @Override
@@ -124,7 +121,7 @@ public class EventServiceImpl implements EventService {
             throw new NotFoundException("Event with id=" + eventId + " was not found", "The required object was not found.");
         }
 
-        return EventMapper.eventToEventFullDto(event);
+        return EventMapper.eventToEventFullDto(event, getViewByEvent(event));
     }
 
     @Override
@@ -134,13 +131,8 @@ public class EventServiceImpl implements EventService {
         if (!event.getState().equals(EventState.PUBLISHED)) {
             throw new NotFoundException("Event with id=" + eventId + " was not found", "The required object was not found.");
         }
-        Integer views = (Integer) statClient.getCount("/events/" + eventId).getBody();
-        if (!views.equals(event.getViews())) {
-            eventRepository.updateViewsById(eventId, views);
-            event.setViews(views);
-        }
 
-        return EventMapper.eventToEventFullDto(event);
+        return EventMapper.eventToEventFullDto(event, getViewByEvent(event));
     }
 
     @Override
@@ -150,17 +142,9 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NotFoundException("User with id=" + userId + " was not found",
                         "The required object was not found."));
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
-
-        return eventRepository.findByInitiatorId(userId, pageable)
-                .stream()
-                .map(event -> {
-                    try {
-                        return EventMapper.eventToEventShortDto(event);
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .collect(Collectors.toList());
+        Page<Event> eventList = eventRepository.findByInitiatorId(userId, pageable);
+        HashMap<Long, Long> viewsMap = getViewsByEvents(eventList.toList());
+        return EventMapper.eventsToEventsShortDto(eventList, viewsMap);
     }
 
     @Override
@@ -177,20 +161,10 @@ public class EventServiceImpl implements EventService {
         }
 
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
-
-        return eventRepository.searchByAdmin(Optional.ofNullable(users),
-                Optional.ofNullable(states),
-                Optional.ofNullable(categories),
-                startDate,
-                endDate,
-                pageable).stream().map(
-                event -> {
-                    try {
-                        return EventMapper.eventToEventFullDto(event);
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).collect(Collectors.toList());
+        Page<Event> eventList = eventRepository.searchByAdmin(Optional.ofNullable(users), Optional.ofNullable(states),
+                Optional.ofNullable(categories), startDate, endDate, pageable);
+        HashMap<Long, Long> viewsMap = getViewsByEvents(eventList.toList());
+        return EventMapper.eventsToEventsFullDto(eventList, viewsMap);
     }
 
     @Override
@@ -205,17 +179,11 @@ public class EventServiceImpl implements EventService {
             }
         }
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
-
-        return eventRepository.searchByPublic(Optional.ofNullable(text),
+        Page<Event> eventList = eventRepository.searchByPublic(Optional.ofNullable(text),
                 Optional.ofNullable(categories), Optional.ofNullable(paid),
-                startDate, endDate, pageable).stream().map(
-                event -> {
-                    try {
-                        return EventMapper.eventToEventShortDto(event);
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).collect(Collectors.toList());
+                startDate, endDate, pageable);
+        HashMap<Long, Long> viewsMap = getViewsByEvents(eventList.toList());
+        return EventMapper.eventsToEventsShortDto(eventList, viewsMap);
     }
 
     @Override
@@ -283,5 +251,48 @@ public class EventServiceImpl implements EventService {
             }).collect(Collectors.toList());
         }
         return new EventRequestStatusUpdateResult(confirmedRequests, rejectedRequests);
+    }
+
+    public HashMap<Long, Long> getViewsByEvents(List<Event> events) throws ParseException {
+        if (events.size() == 0) {
+            return new HashMap<>();
+        }
+        List<String> eventUris = events.stream()
+                .map(event -> "/events/" + event.getId().toString())
+                .collect(Collectors.toList());
+
+        Date startDate = dateFormatter.parse("1990-01-01 00:00:00");
+        Date endDate = dateFormatter.parse("4000-01-01 00:00:00");
+
+        List<Map<String, Object>> views = (List<Map<String, Object>>) statClient.getStats(startDate, endDate,
+                eventUris.toArray(new String[eventUris.size()]), true).getBody();
+
+        HashMap<Long, Long> hashMap = new HashMap<>();
+        for (Map<String, Object> map : views) {
+            String uri = map.get("uri").toString();
+            log.info(uri);
+            Long id = Long.valueOf(uri.substring(uri.lastIndexOf("/") + 1, uri.length()));
+            Long hits = Long.valueOf(map.get("hits").toString());
+            hashMap.put(id, hits);
+        }
+
+        return hashMap;
+    }
+
+    public Long getViewByEvent(Event event) throws ParseException {
+        if (event == null) {
+            return null;
+        }
+        String eventUris = "/events/" + event.getId();
+
+        Date startDate = dateFormatter.parse("1990-01-01 00:00:00");
+        Date endDate = dateFormatter.parse("4000-01-01 00:00:00");
+
+        List<Map<String, Object>> views = (List<Map<String, Object>>) statClient.getStats(startDate, endDate,
+                new String[]{eventUris}, true).getBody();
+
+        Long hits = views.isEmpty() ? 0l : Long.valueOf(views.get(0).get("hits").toString());
+
+        return hits;
     }
 }

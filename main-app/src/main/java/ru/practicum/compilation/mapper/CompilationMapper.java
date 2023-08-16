@@ -9,27 +9,19 @@ import ru.practicum.event.model.Event;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CompilationMapper {
     public static Compilation newCompilationDtoToCompilation(NewCompilationDto newCompilationDto, List<Event> eventList) {
-
         return new Compilation(null, newCompilationDto.getTitle(),
                 newCompilationDto.getPinned() != null && newCompilationDto.getPinned(), eventList);
     }
 
-    public static CompilationDto compilationToCompilationDto(Compilation compilation) {
+    public static CompilationDto compilationToCompilationDto(Compilation compilation, HashMap<Long, Long> viewsMap) throws ParseException {
         List<EventShortDto> eventShortDtoList = new ArrayList<>();
         if (compilation.getEvents() != null) {
-            eventShortDtoList = compilation.getEvents().stream()
-                    .map(event -> {
-                        try {
-                            return EventMapper.eventToEventShortDto(event);
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }).collect(Collectors.toList());
+            eventShortDtoList = EventMapper.eventsToEventsShortDto(compilation.getEvents(), viewsMap);
         }
         return new CompilationDto(compilation.getId(), eventShortDtoList, compilation.getPinned(), compilation.getTitle());
     }

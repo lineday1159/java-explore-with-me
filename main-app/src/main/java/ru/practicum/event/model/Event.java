@@ -52,6 +52,4 @@ public class Event {
     private EventState state;
     @Column(name = "confirmed_requests")
     private int confirmedRequests;
-    @Column
-    private int views;
 }

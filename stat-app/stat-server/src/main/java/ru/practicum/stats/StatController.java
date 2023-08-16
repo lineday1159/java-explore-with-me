@@ -24,6 +24,7 @@ public class StatController {
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody @Valid StatDto statDto) {
+        log.info("Post запрос на создание статистики -{}", statDto);
         statService.create(statDto);
     }
 
@@ -32,11 +33,12 @@ public class StatController {
                                @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date end,
                                @RequestParam(required = false) List<String> uris,
                                @RequestParam(defaultValue = "false") Boolean unique) {
+        log.info("Get запрос на получение кол-во запросов по -{}", uris);
         return statService.get(start, end, uris, unique);
     }
 
     @GetMapping("/statsCount")
-    public Integer getCount(@RequestParam(name = "eventUri") String eventUri) {
+    public Long getCount(@RequestParam(name = "eventUri") String eventUri) {
         log.info("Get запрос на получение кол-во уникальных запросов по -{}", eventUri);
         return statService.getCount(eventUri);
     }

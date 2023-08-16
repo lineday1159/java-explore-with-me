@@ -28,5 +28,5 @@ public class EventFullDto {
     private String createdOn;
     private UserShortDto initiator;
     private EventState state;
-    private int views;
+    private long views;
 }

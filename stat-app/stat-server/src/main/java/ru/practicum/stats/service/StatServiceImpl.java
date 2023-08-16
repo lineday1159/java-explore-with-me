@@ -1,6 +1,7 @@
 package ru.practicum.stats.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.StatDto;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class StatServiceImpl implements StatService {
     private final StatRepository statRepository;
 
@@ -30,15 +32,20 @@ public class StatServiceImpl implements StatService {
             throw new RuntimeException("start date must be before end date");
         }
         if (unique) {
-            return statRepository.searchUnique(start, end, uris == null ? new ArrayList<>() : uris);
+            log.info(uris.toString() + " " + start + " " + end + " " + unique);
+            log.info(statRepository.searchUnique(start, end,
+                    uris == null ? new ArrayList<>() : uris).toString());
+            return statRepository.searchUnique(start, end,
+                    uris == null ? new ArrayList<>() : uris);
         } else {
-            return statRepository.search(start, end, uris == null ? new ArrayList<>() : uris);
+            return statRepository.search(start, end,
+                    uris == null ? new ArrayList<>() : uris);
         }
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Integer getCount(String uri) {
+    public Long getCount(String uri) {
         return statRepository.getCount(uri);
     }
 }

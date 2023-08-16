@@ -13,6 +13,7 @@ import ru.practicum.compilation.service.CompilationService;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -24,7 +25,7 @@ public class CompilationController {
 
     @PostMapping("admin/compilations")
     @ResponseStatus(HttpStatus.CREATED)
-    public CompilationDto save(@RequestBody @Valid NewCompilationDto newCompilationDto) {
+    public CompilationDto save(@RequestBody @Valid NewCompilationDto newCompilationDto) throws ParseException {
         log.info("Post запрос на создание compilations - {}", newCompilationDto);
         return compilationService.save(newCompilationDto);
     }
@@ -38,7 +39,7 @@ public class CompilationController {
 
     @PatchMapping("admin/compilations/{compId}")
     public CompilationDto patch(@PathVariable Long compId,
-                                @RequestBody @Valid UpdateCompilationRequest updateCompilationRequest) {
+                                @RequestBody @Valid UpdateCompilationRequest updateCompilationRequest) throws ParseException {
         log.info("Patch запрос на изменение compilations - {}, по id - {}", updateCompilationRequest, compId);
         return compilationService.patch(compId, updateCompilationRequest);
     }
@@ -52,7 +53,7 @@ public class CompilationController {
     }
 
     @GetMapping("/compilations/{compId}")
-    public CompilationDto get(@PathVariable Long compId) {
+    public CompilationDto get(@PathVariable Long compId) throws ParseException {
         log.info("Get запрос на получение compilations - {}", compId);
         return compilationService.get(compId);
     }

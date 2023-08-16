@@ -11,5 +11,5 @@ public interface StatService {
 
     List<ViewStats> get(Date start, Date end, List<String> uris, Boolean unique);
 
-    Integer getCount(String uri);
+    Long getCount(String uri);
 }
