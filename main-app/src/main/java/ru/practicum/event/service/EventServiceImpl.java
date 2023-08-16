@@ -257,21 +257,20 @@ public class EventServiceImpl implements EventService {
         if (events.size() == 0) {
             return new HashMap<>();
         }
-        List<String> eventUris = events.stream()
-                .map(event -> "/events/" + event.getId().toString())
-                .collect(Collectors.toList());
 
         Date startDate = dateFormatter.parse("1990-01-01 00:00:00");
         Date endDate = dateFormatter.parse("4000-01-01 00:00:00");
 
         List<Map<String, Object>> views = (List<Map<String, Object>>) statClient.getStats(startDate, endDate,
-                eventUris.toArray(new String[eventUris.size()]), true).getBody();
+                events.stream()
+                        .map(event -> "/events/" + event.getId().toString())
+                        .toArray(String[]::new), true).getBody();
 
         HashMap<Long, Long> hashMap = new HashMap<>();
         for (Map<String, Object> map : views) {
             String uri = map.get("uri").toString();
             log.info(uri);
-            Long id = Long.valueOf(uri.substring(uri.lastIndexOf("/") + 1, uri.length()));
+            Long id = Long.valueOf(uri.substring(uri.lastIndexOf("/") + 1));
             Long hits = Long.valueOf(map.get("hits").toString());
             hashMap.put(id, hits);
         }
@@ -291,8 +290,6 @@ public class EventServiceImpl implements EventService {
         List<Map<String, Object>> views = (List<Map<String, Object>>) statClient.getStats(startDate, endDate,
                 new String[]{eventUris}, true).getBody();
 
-        Long hits = views.isEmpty() ? 0L : Long.valueOf(views.get(0).get("hits").toString());
-
-        return hits;
+        return views.isEmpty() ? 0L : Long.parseLong(views.get(0).get("hits").toString());
     }
 }
