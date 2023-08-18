@@ -12,7 +12,6 @@ import ru.practicum.user.dto.UserShortDto;
 import ru.practicum.user.mapper.UserMapper;
 import ru.practicum.user.model.User;
 
-import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ public class EventMapper {
         return new Location(null, locationDto.getLat(), locationDto.getLon());
     }
 
-    public static Event newEventDtoToEvent(User user, NewEventDto newEventDto, Location location, Category category){
+    public static Event newEventDtoToEvent(User user, NewEventDto newEventDto, Location location, Category category) {
         return new Event(null, newEventDto.getTitle(),
                 newEventDto.getAnnotation(), category, newEventDto.getDescription(),
                 LocalDateTime.parse(newEventDto.getEventDate(), dateTimeFormatter), LocalDateTime.now(), null,
@@ -53,7 +52,7 @@ public class EventMapper {
                 event.getState(), views);
     }
 
-    public static List<EventFullDto> eventsToEventsFullDto(Iterable<Event> events, HashMap<Long, Long> viewsMap) throws ParseException {
+    public static List<EventFullDto> eventsToEventsFullDto(Iterable<Event> events, HashMap<Long, Long> viewsMap) {
         List<EventFullDto> eventFullDtoList = new ArrayList<>();
         for (Event event : events) {
             eventFullDtoList.add(eventToEventFullDto(event,
@@ -71,7 +70,7 @@ public class EventMapper {
                 event.getConfirmedRequests(), userShortDto, views);
     }
 
-    public static List<EventShortDto> eventsToEventsShortDto(Iterable<Event> events, HashMap<Long, Long> viewsMap) throws ParseException {
+    public static List<EventShortDto> eventsToEventsShortDto(Iterable<Event> events, HashMap<Long, Long> viewsMap) {
         List<EventShortDto> eventShortDtoList = new ArrayList<>();
         for (Event event : events) {
             eventShortDtoList.add(eventToEventShortDto(event,
