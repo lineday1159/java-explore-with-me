@@ -15,6 +15,7 @@ import ru.practicum.comment.repository.CommentRepository;
 import ru.practicum.error.ConflictException;
 import ru.practicum.error.NotFoundException;
 import ru.practicum.event.model.Event;
+import ru.practicum.event.model.EventState;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.request.model.ParticipationRequest;
 import ru.practicum.request.model.RequestState;
@@ -43,6 +44,10 @@ public class CommentServiceImpl implements CommentService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(
                 "User with id=" + userId + " was not found", "The required object was not found."));
 
+        if (!event.getState().equals(EventState.PUBLISHED)) {
+            throw new ConflictException(
+                    "Event with id=" + eventId + " must be published", "The comment can not be published.");
+        }
         ParticipationRequest request = requestRepository.findByRequesterIdAndEventId(userId, eventId);
         if (request == null) {
             throw new ConflictException(
@@ -68,6 +73,10 @@ public class CommentServiceImpl implements CommentService {
         if (!comment.getUser().getId().equals(userId)) {
             throw new NotFoundException("Comment with id=" + commentId + " was not found",
                     "The required object was not found.");
+        }
+        if (comment.getCreatedOn().toInstant().isBefore((new Date()).toInstant().minusSeconds(3600L))) {
+            throw new ConflictException(
+                    "Comment with id=" + commentId + " was created more than 1 hour ago", "The comment can not be edited.");
         }
         if (!comment.getComment().equals(updateCommentDto.getComment())) {
             comment.setComment(updateCommentDto.getComment());
