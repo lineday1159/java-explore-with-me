@@ -5,7 +5,7 @@ import ru.practicum.event.model.Event;
 import ru.practicum.user.model.User;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -29,5 +29,5 @@ public class Comment {
     @Column
     private String comment;
     @Column(name = "created_on")
-    private Date createdOn;
+    private LocalDateTime createdOn;
 }

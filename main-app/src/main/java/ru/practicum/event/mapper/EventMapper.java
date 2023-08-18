@@ -12,17 +12,16 @@ import ru.practicum.user.dto.UserShortDto;
 import ru.practicum.user.mapper.UserMapper;
 import ru.practicum.user.model.User;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 public class EventMapper {
-    private static final String dateFormat = "yyyy-MM-dd HH:mm:ss";
-    private static final DateFormat dateFormatter = new SimpleDateFormat(dateFormat);
+
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static LocationDto locationToLocationDto(Location location) {
         return new LocationDto(location.getLat(), location.getLon());
@@ -32,25 +31,25 @@ public class EventMapper {
         return new Location(null, locationDto.getLat(), locationDto.getLon());
     }
 
-    public static Event newEventDtoToEvent(User user, NewEventDto newEventDto, Location location, Category category) throws ParseException {
+    public static Event newEventDtoToEvent(User user, NewEventDto newEventDto, Location location, Category category){
         return new Event(null, newEventDto.getTitle(),
                 newEventDto.getAnnotation(), category, newEventDto.getDescription(),
-                dateFormatter.parse(newEventDto.getEventDate()), new Date(), null,
+                LocalDateTime.parse(newEventDto.getEventDate(), dateTimeFormatter), LocalDateTime.now(), null,
                 location, user, newEventDto.getPaid() != null ? newEventDto.getPaid() : false,
                 newEventDto.getParticipantLimit(),
                 newEventDto.getRequestModeration() != null ? newEventDto.getRequestModeration() : true,
                 EventState.PENDING, 0);
     }
 
-    public static EventFullDto eventToEventFullDto(Event event, Long views) throws ParseException {
+    public static EventFullDto eventToEventFullDto(Event event, Long views) {
         CategoryDto categoryDto = CategoryMapper.categoryToCategoryDto(event.getCategory());
         UserShortDto userShortDto = UserMapper.userToUserShortDto(event.getInitiator());
         LocationDto locationDto = locationToLocationDto(event.getLocation());
         return new EventFullDto(event.getId(), event.getTitle(), event.getAnnotation(),
-                categoryDto, event.getDescription(), dateFormatter.format(event.getEventDate()),
-                event.getPublishedOn() != null ? dateFormatter.format(event.getPublishedOn()) : null,
+                categoryDto, event.getDescription(), event.getEventDate().format(dateTimeFormatter),
+                event.getPublishedOn() != null ? event.getPublishedOn().format(dateTimeFormatter) : null,
                 locationDto, event.isPaid(), event.getParticipantLimit(), event.isRequestModeration(),
-                event.getConfirmedRequests(), dateFormatter.format(event.getCreatedOn()), userShortDto,
+                event.getConfirmedRequests(), event.getCreatedOn().format(dateTimeFormatter), userShortDto,
                 event.getState(), views);
     }
 
@@ -64,11 +63,11 @@ public class EventMapper {
     }
 
 
-    public static EventShortDto eventToEventShortDto(Event event, Long views) throws ParseException {
+    public static EventShortDto eventToEventShortDto(Event event, Long views) {
         CategoryDto categoryDto = CategoryMapper.categoryToCategoryDto(event.getCategory());
         UserShortDto userShortDto = UserMapper.userToUserShortDto(event.getInitiator());
         return new EventShortDto(event.getId(), event.getTitle(), event.getAnnotation(),
-                categoryDto, dateFormatter.format(event.getEventDate()), event.isPaid(),
+                categoryDto, event.getEventDate().format(dateTimeFormatter), event.isPaid(),
                 event.getConfirmedRequests(), userShortDto, views);
     }
 
@@ -81,7 +80,7 @@ public class EventMapper {
         return eventShortDtoList;
     }
 
-    public static Event updateEventToEvent(Event oldEvent, UpdateEventUserRequest updateEvent, Category category) throws ParseException {
+    public static Event updateEventToEvent(Event oldEvent, UpdateEventUserRequest updateEvent, Category category) {
         if (updateEvent.getTitle() != null) {
             oldEvent.setTitle(updateEvent.getTitle());
         }
@@ -104,7 +103,7 @@ public class EventMapper {
             oldEvent.setPaid(updateEvent.getPaid());
         }
         if (updateEvent.getEventDate() != null) {
-            oldEvent.setEventDate(dateFormatter.parse(updateEvent.getEventDate()));
+            oldEvent.setEventDate(LocalDateTime.parse(updateEvent.getEventDate(), dateTimeFormatter));
         }
         if (updateEvent.getStateAction() != null) {
             if (updateEvent.getStateAction().equals(StateAction.CANCEL_REVIEW)) {
@@ -117,7 +116,7 @@ public class EventMapper {
         return oldEvent;
     }
 
-    public static Event updateEventAdminToEvent(Event oldEvent, UpdateEventAdminRequest updateEvent, Category category) throws ParseException {
+    public static Event updateEventAdminToEvent(Event oldEvent, UpdateEventAdminRequest updateEvent, Category category) {
         if (updateEvent.getTitle() != null) {
             oldEvent.setTitle(updateEvent.getTitle());
         }
@@ -140,7 +139,7 @@ public class EventMapper {
             oldEvent.setPaid(updateEvent.getPaid());
         }
         if (updateEvent.getEventDate() != null) {
-            oldEvent.setEventDate(dateFormatter.parse(updateEvent.getEventDate()));
+            oldEvent.setEventDate(LocalDateTime.parse(updateEvent.getEventDate(), dateTimeFormatter));
         }
         if (updateEvent.getStateAction() != null) {
             if (updateEvent.getStateAction().equals(StateAction.REJECT_EVENT)) {
@@ -148,7 +147,7 @@ public class EventMapper {
             }
             if (updateEvent.getStateAction().equals(StateAction.PUBLISH_EVENT)) {
                 oldEvent.setState(EventState.PUBLISHED);
-                oldEvent.setPublishedOn(new Date());
+                oldEvent.setPublishedOn(LocalDateTime.now());
             }
         }
         return oldEvent;

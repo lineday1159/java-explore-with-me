@@ -29,9 +29,9 @@ import ru.practicum.request.repository.RequestRepository;
 import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,8 +45,8 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
     private final RequestRepository requestRepository;
-    private static final String dateFormat = "yyyy-MM-dd HH:mm:ss";
-    private static final DateFormat dateFormatter = new SimpleDateFormat(dateFormat);
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
 
     @Override
     @Transactional
@@ -55,9 +55,10 @@ public class EventServiceImpl implements EventService {
         Category category = categoryRepository.findById(newEventDto.getCategory())
                 .orElseThrow(() -> new NotFoundException("Category with id=" + newEventDto.getCategory() + " was not found",
                         "The required object was not found."));
-        Date eventDate = dateFormatter.parse(newEventDto.getEventDate());
-        Date currentDate = new Date();
-        if (eventDate.toInstant().isBefore(currentDate.toInstant().plusSeconds(7200))) {
+        LocalDateTime eventDate = LocalDateTime.parse(newEventDto.getEventDate(), dateTimeFormatter);
+        LocalDateTime currentDate = LocalDateTime.now();
+
+        if (eventDate.isBefore(currentDate.plusHours(2))) {
             throw new BadRequestException("Event date must be before current date + 2h",
                     "Some request parameters are not correct.");
         }
@@ -78,9 +79,10 @@ public class EventServiceImpl implements EventService {
             throw new ConflictException("Incorrectly made request.", "Event must not be published");
         }
         if (updateEventUserRequest.getEventDate() != null) {
-            Date eventDate = dateFormatter.parse(updateEventUserRequest.getEventDate());
-            Date currentDate = new Date();
-            if (eventDate.toInstant().isBefore(currentDate.toInstant().plusSeconds(7200))) {
+            LocalDateTime eventDate = LocalDateTime.parse(updateEventUserRequest.getEventDate(), dateTimeFormatter);
+            LocalDateTime currentDate = LocalDateTime.now();
+
+            if (eventDate.isBefore(currentDate.plusHours(2))) {
                 throw new BadRequestException("Event date must be before current date + 2h",
                         "Some request parameters are not correct.");
             }
@@ -97,9 +99,10 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NotFoundException("Category with id=" + updateEventAdminRequest.getCategory() + " was not found",
                         "The required object was not found."));
         if (updateEventAdminRequest.getEventDate() != null) {
-            Date eventDate = dateFormatter.parse(updateEventAdminRequest.getEventDate());
-            Date currentDate = new Date();
-            if (eventDate.toInstant().isBefore(currentDate.toInstant().plusSeconds(7200))) {
+            LocalDateTime eventDate = LocalDateTime.parse(updateEventAdminRequest.getEventDate(), dateTimeFormatter);
+            LocalDateTime currentDate = LocalDateTime.now();
+
+            if (eventDate.isBefore(currentDate.plusHours(2))) {
                 throw new BadRequestException("Event date must be before current date + 2h",
                         "Some request parameters are not correct.");
             }
@@ -131,7 +134,6 @@ public class EventServiceImpl implements EventService {
         if (!event.getState().equals(EventState.PUBLISHED)) {
             throw new NotFoundException("Event with id=" + eventId + " was not found", "The required object was not found.");
         }
-
         return EventMapper.eventToEventFullDto(event, getViewByEvent(event));
     }
 
@@ -149,17 +151,16 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<EventFullDto> getListByAdmin(List<Long> users, List<EventState> states, List<Long> categories, String rangeEnd, String rangeStart, int from, int size) throws ParseException {
-        Optional<Date> startDate = rangeEnd != null ? Optional.ofNullable(dateFormatter.parse(rangeStart)) : Optional.empty();
-        Optional<Date> endDate = rangeEnd != null ? Optional.ofNullable(dateFormatter.parse(rangeEnd)) : Optional.empty();
-        log.info(startDate + "  " + endDate);
+    public List<EventFullDto> getListByAdmin(List<Long> users, List<EventState> states, List<Long> categories, LocalDateTime rangeEnd, LocalDateTime rangeStart, int from, int size) throws ParseException {
+        Optional<LocalDateTime> startDate = rangeEnd != null ? Optional.ofNullable(rangeStart) : Optional.empty();
+        Optional<LocalDateTime> endDate = rangeEnd != null ? Optional.ofNullable(rangeEnd) : Optional.empty();
+
         if (startDate.isPresent() && endDate.isPresent()) {
-            if (startDate.get().after(endDate.get())) {
+            if (startDate.get().isAfter(endDate.get())) {
                 throw new BadRequestException("Start date must be before end date",
                         "Some request parameters are not correct.");
             }
         }
-
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
         Page<Event> eventList = eventRepository.searchByAdmin(Optional.ofNullable(users), Optional.ofNullable(states),
                 Optional.ofNullable(categories), startDate, endDate, pageable);
@@ -169,15 +170,17 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<EventShortDto> getListByPublic(String text, List<Long> categories, Boolean paid, String rangeStart, String rangeEnd, Boolean onlyAvailable, String sort, int from, int size) throws ParseException {
-        Optional<Date> startDate = rangeEnd != null ? Optional.ofNullable(dateFormatter.parse(rangeStart)) : Optional.ofNullable(new Date());
-        Optional<Date> endDate = rangeEnd != null ? Optional.ofNullable(dateFormatter.parse(rangeEnd)) : Optional.empty();
+    public List<EventShortDto> getListByPublic(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, String sort, int from, int size) throws ParseException {
+        Optional<LocalDateTime> startDate = rangeEnd != null ? Optional.ofNullable(rangeStart) : Optional.empty();
+        Optional<LocalDateTime> endDate = rangeEnd != null ? Optional.ofNullable(rangeEnd) : Optional.empty();
+
         if (startDate.isPresent() && endDate.isPresent()) {
-            if (startDate.get().after(endDate.get())) {
+            if (startDate.get().isAfter(endDate.get())) {
                 throw new BadRequestException("Start date must be before end date",
                         "Some request parameters are not correct.");
             }
         }
+
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
         Page<Event> eventList = eventRepository.searchByPublic(Optional.ofNullable(text),
                 Optional.ofNullable(categories), Optional.ofNullable(paid),
@@ -254,13 +257,13 @@ public class EventServiceImpl implements EventService {
         return new EventRequestStatusUpdateResult(confirmedRequests, rejectedRequests);
     }
 
-    public HashMap<Long, Long> getViewsByEvents(List<Event> events) throws ParseException {
+    public HashMap<Long, Long> getViewsByEvents(List<Event> events) {
         if (events.size() == 0) {
             return new HashMap<>();
         }
 
-        Date startDate = dateFormatter.parse("1990-01-01 00:00:00");
-        Date endDate = dateFormatter.parse("4000-01-01 00:00:00");
+        LocalDateTime startDate = LocalDateTime.parse("1990-01-01 00:00:00", dateTimeFormatter);
+        LocalDateTime endDate = LocalDateTime.parse("4000-01-01 00:00:00", dateTimeFormatter);
 
         List<Map<String, Object>> views = (List<Map<String, Object>>) statClient.getStats(startDate, endDate,
                 events.stream()
@@ -279,14 +282,14 @@ public class EventServiceImpl implements EventService {
         return hashMap;
     }
 
-    public Long getViewByEvent(Event event) throws ParseException {
+    public Long getViewByEvent(Event event) {
         if (event == null) {
             return null;
         }
         String eventUris = "/events/" + event.getId();
 
-        Date startDate = dateFormatter.parse("1990-01-01 00:00:00");
-        Date endDate = dateFormatter.parse("4000-01-01 00:00:00");
+        LocalDateTime startDate = LocalDateTime.parse("1990-01-01 00:00:00", dateTimeFormatter);
+        LocalDateTime endDate = LocalDateTime.parse("4000-01-01 00:00:00", dateTimeFormatter);
 
         List<Map<String, Object>> views = (List<Map<String, Object>>) statClient.getStats(startDate, endDate,
                 new String[]{eventUris}, true).getBody();

@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.EventState;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,8 +32,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     Page<Event> searchByAdmin(@Param("users") Optional<List<Long>> users,
                               @Param("states") Optional<List<EventState>> states,
                               @Param("categories") Optional<List<Long>> categories,
-                              @Param("rangeStart") Optional<Date> rangeStart,
-                              @Param("rangeEnd") Optional<Date> rangeEnd,
+                              @Param("rangeStart") Optional<LocalDateTime> rangeStart,
+                              @Param("rangeEnd") Optional<LocalDateTime> rangeEnd,
                               Pageable pageable);
 
     @Query("Select e " +
@@ -46,8 +46,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     Page<Event> searchByPublic(@Param("text") Optional<String> text,
                                @Param("categories") Optional<List<Long>> categories,
                                @Param("paid") Optional<Boolean> paid,
-                               @Param("rangeStart") Optional<Date> rangeStart,
-                               @Param("rangeEnd") Optional<Date> rangeEnd,
+                               @Param("rangeStart") Optional<LocalDateTime> rangeStart,
+                               @Param("rangeEnd") Optional<LocalDateTime> rangeEnd,
                                Pageable pageable);
 
     @Modifying

@@ -6,6 +6,7 @@ import ru.practicum.event.model.EventState;
 import ru.practicum.request.dto.ParticipationRequestDto;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,12 +26,12 @@ public interface EventService {
     EventFullDto getByPublic(Long eventId) throws ParseException;
 
     List<EventFullDto> getListByAdmin(List<Long> users, List<EventState> states, List<Long> categories,
-                                      String rangeEnd, String rangeStart, int from, int size) throws ParseException;
+                                      LocalDateTime rangeEnd, LocalDateTime rangeStart, int from, int size) throws ParseException;
 
     List<EventShortDto> getList(Long userId, int from, int size) throws ParseException;
 
-    List<EventShortDto> getListByPublic(String text, List<Long> categories, Boolean paid, String rangeStart, String rangeEnd,
+    List<EventShortDto> getListByPublic(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd,
                                         Boolean onlyAvailable, String sort, int from, int size) throws ParseException;
 
-    public HashMap<Long, Long> getViewsByEvents(List<Event> events) throws ParseException;
+    HashMap<Long, Long> getViewsByEvents(List<Event> events) throws ParseException;
 }

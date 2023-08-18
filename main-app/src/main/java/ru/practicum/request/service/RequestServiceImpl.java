@@ -17,7 +17,7 @@ import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
 
 import java.text.ParseException;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -62,8 +62,8 @@ public class RequestServiceImpl implements RequestService {
             eventRepository.updateConfirmedRequestsById(eventId, 1);
         }
 
-        ParticipationRequest participationRequest = requestRepository.save(new ParticipationRequest(null, new Date(),
-                user, event, requestState));
+        ParticipationRequest participationRequest = requestRepository.save(new ParticipationRequest(null,
+                LocalDateTime.now(), user, event, requestState));
         return RequestMapper.requestToRequestDto(participationRequest);
     }
 

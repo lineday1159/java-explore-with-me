@@ -23,7 +23,7 @@ import ru.practicum.request.repository.RequestRepository;
 import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,7 +74,7 @@ public class CommentServiceImpl implements CommentService {
             throw new NotFoundException("Comment with id=" + commentId + " was not found",
                     "The required object was not found.");
         }
-        if (comment.getCreatedOn().toInstant().isBefore((new Date()).toInstant().minusSeconds(3600L))) {
+        if (comment.getCreatedOn().isBefore(LocalDateTime.now().minusHours(1))) {
             throw new ConflictException(
                     "Comment with id=" + commentId + " was created more than 1 hour ago", "The comment can not be edited.");
         }
@@ -114,7 +114,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CommentDto> getList(Long eventId, List<Long> userIds, Date rangeStart, Date rangeEnd, int from, int size) {
+    public List<CommentDto> getList(Long eventId, List<Long> userIds, LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size) {
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
 
         return CommentMapper.commentsToCommentsDto(commentRepository.search(eventId,

@@ -14,7 +14,7 @@ import ru.practicum.comment.service.CommentService;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -60,8 +60,8 @@ public class CommentController {
     @GetMapping("/events/{eventId}/comments")
     public List<CommentDto> getList(@PathVariable Long eventId,
                                     @RequestParam(required = false) List<Long> userIds,
-                                    @RequestParam(required = false) @DateTimeFormat(pattern = DATE_TIME_FORMAT) Date rangeStart,
-                                    @RequestParam(required = false) @DateTimeFormat(pattern = DATE_TIME_FORMAT) Date rangeEnd,
+                                    @RequestParam(required = false) @DateTimeFormat(pattern = DATE_TIME_FORMAT) LocalDateTime rangeStart,
+                                    @RequestParam(required = false) @DateTimeFormat(pattern = DATE_TIME_FORMAT) LocalDateTime rangeEnd,
                                     @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                     @RequestParam(defaultValue = "10") @Positive int size) {
         log.info("Get запрос на получение списка комментов по event - {}", eventId);

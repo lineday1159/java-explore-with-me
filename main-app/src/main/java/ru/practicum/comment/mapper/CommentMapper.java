@@ -7,25 +7,22 @@ import ru.practicum.event.model.Event;
 import ru.practicum.user.mapper.UserMapper;
 import ru.practicum.user.model.User;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class CommentMapper {
-
-    private static final String dateFormat = "yyyy-MM-dd HH:mm:ss";
-    private static final DateFormat dateFormatter = new SimpleDateFormat(dateFormat);
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static Comment newCommentDtoToComment(NewCommentDto newCommentDto, User user, Event event) {
-        return new Comment(null, event, user, newCommentDto.getComment(), new Date());
+        return new Comment(null, event, user, newCommentDto.getComment(), LocalDateTime.now());
     }
 
     public static CommentDto commentToCommentDto(Comment comment) {
         return new CommentDto(comment.getId(), comment.getEvent().getId(),
                 UserMapper.userToUserShortDto(comment.getUser()),
-                comment.getComment(), dateFormatter.format(comment.getCreatedOn()));
+                comment.getComment(), comment.getCreatedOn().format(dateTimeFormatter));
     }
 
     public static List<CommentDto> commentsToCommentsDto(Iterable<Comment> comments) {

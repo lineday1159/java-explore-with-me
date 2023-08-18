@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.practicum.comment.model.Comment;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,8 +20,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "(cast(:rangeEnd as date) is null or cast(:rangeEnd as date) > c.createdOn)")
     Page<Comment> search(@Param("event") Long eventId,
                          @Param("users") Optional<List<Long>> users,
-                         @Param("rangeStart") Optional<Date> rangeStart,
-                         @Param("rangeEnd") Optional<Date> rangeEnd,
+                         @Param("rangeStart") Optional<LocalDateTime> rangeStart,
+                         @Param("rangeEnd") Optional<LocalDateTime> rangeEnd,
                          Pageable pageable);
 
 }
