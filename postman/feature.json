@@ -10,7 +10,7 @@
       "name": "Validation",
       "item": [
         {
-          "name": "Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРјРјРµРЅС‚Р° СЃ РїСѓСЃС‚С‹Рј С‚РµРєСЃС‚РѕРј",
+          "name": "Добавление коммента с пустым текстом",
           "event": [
             {
               "listen": "prerequest",
@@ -29,7 +29,7 @@
                   "        comment = rnd.getComment();\r",
                   "        comment[\"comment\"] = '';\r",
                   "    } catch(err) {\r",
-                  "        console.error(\"РћС€РёР±РєР° РїСЂРё РїРѕРґРіРѕС‚РѕРІРєРµ С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С….\", err);\r",
+                  "        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
                   "    }\r",
                   "    pm.request.body.update({\r",
                   "        mode: 'raw',\r",
@@ -60,7 +60,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"РћС‚РІРµС‚ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РєРѕРґ СЃС‚Р°С‚СѓСЃР° 400 Рё РґР°РЅРЅС‹Рµ РІ С„РѕСЂРјР°С‚Рµ json\", function () {\r",
+                  "pm.test(\"Ответ должен содержать код статуса 400 и данные в формате json\", function () {\r",
                   "    pm.response.to.be.badRequest;    \r",
                   "    pm.response.to.be.withBody;\r",
                   "    pm.response.to.be.json;\r",
@@ -116,7 +116,7 @@
           "response": []
         },
         {
-          "name": "Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРјРјРµРЅС‚Р° СЃ С‚РµРєСЃС‚РѕРј РјРµРЅСЊС€Рµ 20 СЃРёРјРІРѕР»РѕРІ",
+          "name": "Добавление коммента с текстом меньше 20 символов",
           "event": [
             {
               "listen": "prerequest",
@@ -135,7 +135,7 @@
                   "        comment = rnd.getComment();\r",
                   "        comment[\"comment\"] = 'textextextextextesx';\r",
                   "    } catch(err) {\r",
-                  "        console.error(\"РћС€РёР±РєР° РїСЂРё РїРѕРґРіРѕС‚РѕРІРєРµ С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С….\", err);\r",
+                  "        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
                   "    }\r",
                   "    pm.request.body.update({\r",
                   "        mode: 'raw',\r",
@@ -166,7 +166,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"РћС‚РІРµС‚ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РєРѕРґ СЃС‚Р°С‚СѓСЃР° 400 Рё РґР°РЅРЅС‹Рµ РІ С„РѕСЂРјР°С‚Рµ json\", function () {\r",
+                  "pm.test(\"Ответ должен содержать код статуса 400 и данные в формате json\", function () {\r",
                   "    pm.response.to.be.badRequest;    \r",
                   "    pm.response.to.be.withBody;\r",
                   "    pm.response.to.be.json;\r",
@@ -222,7 +222,7 @@
           "response": []
         },
         {
-          "name": "Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРјРјРµРЅС‚Р° РѕС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ, РЅРµ СѓС‡Р°СЃС‚РЅРёРєР° СЃРѕР±С‹С‚РёСЏ",
+          "name": "Добавление коммента от пользователя, не участника события",
           "event": [
             {
               "listen": "prerequest",
@@ -241,7 +241,7 @@
                   "        pm.collectionVariables.set(\"eid\", event.id);\r",
                   "        comment = rnd.getComment();\r",
                   "    } catch(err) {\r",
-                  "        console.error(\"РћС€РёР±РєР° РїСЂРё РїРѕРґРіРѕС‚РѕРІРєРµ С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С….\", err);\r",
+                  "        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
                   "    }\r",
                   "    pm.request.body.update({\r",
                   "        mode: 'raw',\r",
@@ -272,7 +272,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"РћС‚РІРµС‚ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РєРѕРґ СЃС‚Р°С‚СѓСЃР° 409 Рё РґР°РЅРЅС‹Рµ РІ С„РѕСЂРјР°С‚Рµ json\", function () {\r",
+                  "pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {\r",
                   "    pm.response.to.have.status(409);\r",
                   "    pm.response.to.be.withBody;\r",
                   "    pm.response.to.be.json;\r",
@@ -328,7 +328,7 @@
           "response": []
         },
         {
-          "name": "Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРјРјРµРЅС‚Р° РѕС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‰РµРјСѓ СЃРѕР±С‹С‚РёСЋ",
+          "name": "Добавление коммента от пользователя по отсутствующему событию",
           "event": [
             {
               "listen": "prerequest",
@@ -344,7 +344,7 @@
                   "        pm.collectionVariables.set(\"eid\", -1);\r",
                   "        comment = rnd.getComment();\r",
                   "    } catch(err) {\r",
-                  "        console.error(\"РћС€РёР±РєР° РїСЂРё РїРѕРґРіРѕС‚РѕРІРєРµ С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С….\", err);\r",
+                  "        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
                   "    }\r",
                   "    pm.request.body.update({\r",
                   "        mode: 'raw',\r",
@@ -375,7 +375,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"РћС‚РІРµС‚ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РєРѕРґ СЃС‚Р°С‚СѓСЃР° 404 Рё РґР°РЅРЅС‹Рµ РІ С„РѕСЂРјР°С‚Рµ json\", function () {\r",
+                  "pm.test(\"Ответ должен содержать код статуса 404 и данные в формате json\", function () {\r",
                   "    pm.response.to.have.status(404);\r",
                   "    pm.response.to.be.withBody;\r",
                   "    pm.response.to.be.json;\r",
@@ -431,7 +431,7 @@
           "response": []
         },
         {
-          "name": "Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРјРјРµРЅС‚Р° РѕС‚ РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‰РµРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ",
+          "name": "Добавление коммента от отсутствующего пользователя",
           "event": [
             {
               "listen": "prerequest",
@@ -449,7 +449,7 @@
                   "        pm.collectionVariables.set(\"eid\", event.id);\r",
                   "        comment = rnd.getComment();\r",
                   "    } catch(err) {\r",
-                  "        console.error(\"РћС€РёР±РєР° РїСЂРё РїРѕРґРіРѕС‚РѕРІРєРµ С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С….\", err);\r",
+                  "        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
                   "    }\r",
                   "    pm.request.body.update({\r",
                   "        mode: 'raw',\r",
@@ -480,7 +480,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"РћС‚РІРµС‚ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РєРѕРґ СЃС‚Р°С‚СѓСЃР° 404 Рё РґР°РЅРЅС‹Рµ РІ С„РѕСЂРјР°С‚Рµ json\", function () {\r",
+                  "pm.test(\"Ответ должен содержать код статуса 404 и данные в формате json\", function () {\r",
                   "    pm.response.to.have.status(404);\r",
                   "    pm.response.to.be.withBody;\r",
                   "    pm.response.to.be.json;\r",
@@ -536,7 +536,7 @@
           "response": []
         },
         {
-          "name": "РћР±РЅРѕРІР»РµРЅРёРµ РєРѕРјРјРµРЅС‚Р° РЅР° РїСѓСЃС‚РѕР№ С‚РµРєСЃС‚",
+          "name": "Обновление коммента на пустой текст",
           "event": [
             {
               "listen": "prerequest",
@@ -564,7 +564,7 @@
                   "        comment2[\"comment\"] = '';\r",
                   "\r",
                   "    } catch(err) {\r",
-                  "        console.error(\"РћС€РёР±РєР° РїСЂРё РїРѕРґРіРѕС‚РѕРІРєРµ С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С….\", err);\r",
+                  "        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
                   "    }\r",
                   "    pm.request.body.update({\r",
                   "        mode: 'raw',\r",
@@ -595,7 +595,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"РћС‚РІРµС‚ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РєРѕРґ СЃС‚Р°С‚СѓСЃР° 400 Рё РґР°РЅРЅС‹Рµ РІ С„РѕСЂРјР°С‚Рµ json\", function () {\r",
+                  "pm.test(\"Ответ должен содержать код статуса 400 и данные в формате json\", function () {\r",
                   "    pm.response.to.be.badRequest;\r",
                   "    pm.response.to.be.withBody;\r",
                   "    pm.response.to.be.json;\r",
@@ -651,7 +651,7 @@
           "response": []
         },
         {
-          "name": "РћР±РЅРѕРІР»РµРЅРёРµ РєРѕРјРјРµРЅС‚Р° РЅРµ СЃРѕР·РґР°С‚РµР»РµРј РєРѕРјРјРµРЅС‚Р°",
+          "name": "Обновление коммента не создателем коммента",
           "event": [
             {
               "listen": "prerequest",
@@ -678,7 +678,7 @@
                   "        comment2 = rnd.getComment();\r",
                   "\r",
                   "    } catch(err) {\r",
-                  "        console.error(\"РћС€РёР±РєР° РїСЂРё РїРѕРґРіРѕС‚РѕРІРєРµ С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С….\", err);\r",
+                  "        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
                   "    }\r",
                   "    pm.request.body.update({\r",
                   "        mode: 'raw',\r",
@@ -709,7 +709,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"РћС‚РІРµС‚ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РєРѕРґ СЃС‚Р°С‚СѓСЃР° 404 Рё РґР°РЅРЅС‹Рµ РІ С„РѕСЂРјР°С‚Рµ json\", function () {\r",
+                  "pm.test(\"Ответ должен содержать код статуса 404 и данные в формате json\", function () {\r",
                   "    pm.response.to.have.status(404);\r",
                   "    pm.response.to.be.withBody;\r",
                   "    pm.response.to.be.json;\r",
@@ -765,7 +765,7 @@
           "response": []
         },
         {
-          "name": "РЈРґР°Р»РµРЅРёРµ РєРѕРјРјРµРЅС‚Р° РЅРµ СЃРѕР·РґР°С‚РµР»РµРј",
+          "name": "Удаление коммента не создателем",
           "event": [
             {
               "listen": "prerequest",
@@ -790,7 +790,7 @@
                   "        pm.collectionVariables.set(\"cid\", comment.id);\r",
                   "\r",
                   "    } catch(err) {\r",
-                  "        console.error(\"РћС€РёР±РєР° РїСЂРё РїРѕРґРіРѕС‚РѕРІРєРµ С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С….\", err);\r",
+                  "        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
                   "    }\r",
                   "};\r",
                   "\r",
@@ -816,7 +816,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"РћС‚РІРµС‚ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РєРѕРґ СЃС‚Р°С‚СѓСЃР° 404 Рё РґР°РЅРЅС‹Рµ РІ С„РѕСЂРјР°С‚Рµ json\", function () {\r",
+                  "pm.test(\"Ответ должен содержать код статуса 404 и данные в формате json\", function () {\r",
                   "    pm.response.to.have.status(404);\r",
                   "    pm.response.to.be.withBody;\r",
                   "    pm.response.to.be.json;\r",
@@ -877,7 +877,7 @@
       "name": "Comment",
       "item": [
         {
-          "name": "Р”РѕР±Р°РІР»РµРЅРёРµ РЅРѕРІРѕРіРѕ РєРѕРјРјРµРЅС‚Р°",
+          "name": "Добавление нового коммента",
           "event": [
             {
               "listen": "prerequest",
@@ -902,7 +902,7 @@
                   "        comment =  rnd.getComment();\r",
                   "\r",
                   "    } catch(err) {\r",
-                  "        console.error(\"РћС€РёР±РєР° РїСЂРё РїРѕРґРіРѕС‚РѕРІРєРµ С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С….\", err);\r",
+                  "        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
                   "    }\r",
                   "    pm.request.body.update({\r",
                   "        mode: 'raw',\r",
@@ -933,7 +933,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"РћС‚РІРµС‚ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РєРѕРґ СЃС‚Р°С‚СѓСЃР° 201 Рё РґР°РЅРЅС‹Рµ РІ С„РѕСЂРјР°С‚Рµ json\", function () {\r",
+                  "pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
                   "    pm.response.to.have.status(201);\r",
                   "    pm.response.to.be.withBody;\r",
                   "    pm.response.to.be.json;\r",
@@ -942,7 +942,7 @@
                   "const source = JSON.parse(pm.request.body.raw);\r",
                   "const target = pm.response.json();\r",
                   "\r",
-                  "pm.test(\"РљРѕРјРјРµРЅС‚Р°СЂРёР№ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РїРѕР»СЏ: id, comment\", function () {\r",
+                  "pm.test(\"Комментарий должен содержать поля: id, comment\", function () {\r",
                   "pm.expect(target).to.have.property('id');\r",
                   "pm.expect(target).to.have.property('comment');\r",
                   "pm.expect(target).to.have.property('eventId');\r",
@@ -950,9 +950,9 @@
                   "pm.expect(target).to.have.property('createdOn');\r",
                   "});\r",
                   "\r",
-                  "pm.test(\"Р”Р°РЅРЅС‹Рµ РІ РѕС‚РІРµС‚Рµ РґРѕР»Р¶РЅС‹ СЃРѕРѕС‚РІРµС‚СЃС‚РІРѕРІР°С‚СЊ РґР°РЅРЅС‹Рј РІ Р·Р°РїСЂРѕСЃРµ\", function () {\r",
+                  "pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
                   "    pm.expect(target.id).to.not.be.null;\r",
-                  "    pm.expect(source.comment).equal(target.comment, 'С‚РµРєСЃС‚ РєРѕРјРјРµРЅС‚Р° РґРѕР»Р¶РµРЅ СЃРѕРІРїР°РґР°С‚СЊ СЃ РѕС‚РїСЂР°РІР»РµРЅРЅС‹Рј');\r",
+                  "    pm.expect(source.comment).equal(target.comment, 'текст коммента должен совпадать с отправленным');\r",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -1004,7 +1004,7 @@
           "response": []
         },
         {
-          "name": "РћР±РЅРѕРІР»РµРЅРёРµ РєРѕРјРјРµРЅС‚Р°",
+          "name": "Обновление коммента",
           "event": [
             {
               "listen": "prerequest",
@@ -1032,7 +1032,7 @@
                   "        comment2 = rnd.getComment();\r",
                   "\r",
                   "    } catch(err) {\r",
-                  "        console.error(\"РћС€РёР±РєР° РїСЂРё РїРѕРґРіРѕС‚РѕРІРєРµ С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С….\", err);\r",
+                  "        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
                   "    }\r",
                   "    pm.request.body.update({\r",
                   "        mode: 'raw',\r",
@@ -1063,7 +1063,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"РћС‚РІРµС‚ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РєРѕРґ СЃС‚Р°С‚СѓСЃР° 200 Рё РґР°РЅРЅС‹Рµ РІ С„РѕСЂРјР°С‚Рµ json\", function () {\r",
+                  "pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
                   "    pm.response.to.be.ok\r",
                   "    pm.response.to.be.withBody;\r",
                   "    pm.response.to.be.json;\r",
@@ -1072,7 +1072,7 @@
                   "const source = JSON.parse(pm.request.body.raw);\r",
                   "const target = pm.response.json();\r",
                   "\r",
-                  "pm.test(\"РљРѕРјРјРµРЅС‚Р°СЂРёР№ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РїРѕР»СЏ: id, comment\", function () {\r",
+                  "pm.test(\"Комментарий должен содержать поля: id, comment\", function () {\r",
                   "pm.expect(target).to.have.property('id');\r",
                   "pm.expect(target).to.have.property('comment');\r",
                   "pm.expect(target).to.have.property('eventId');\r",
@@ -1080,9 +1080,9 @@
                   "pm.expect(target).to.have.property('createdOn');\r",
                   "});\r",
                   "\r",
-                  "pm.test(\"Р”Р°РЅРЅС‹Рµ РІ РѕС‚РІРµС‚Рµ РґРѕР»Р¶РЅС‹ СЃРѕРѕС‚РІРµС‚СЃС‚РІРѕРІР°С‚СЊ РґР°РЅРЅС‹Рј РІ Р·Р°РїСЂРѕСЃРµ\", function () {\r",
+                  "pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
                   "    pm.expect(target.id).to.not.be.null;\r",
-                  "    pm.expect(source.comment).equal(target.comment, 'С‚РµРєСЃС‚ РєРѕРјРјРµРЅС‚Р° РґРѕР»Р¶РµРЅ СЃРѕРІРїР°РґР°С‚СЊ СЃ РѕС‚РїСЂР°РІР»РµРЅРЅС‹Рј');\r",
+                  "    pm.expect(source.comment).equal(target.comment, 'текст коммента должен совпадать с отправленным');\r",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -1134,7 +1134,7 @@
           "response": []
         },
         {
-          "name": "РџРѕР»СѓС‡РµРЅРёРµ РєРѕРјРјРµРЅС‚Р°",
+          "name": "Получение коммента",
           "event": [
             {
               "listen": "prerequest",
@@ -1157,7 +1157,7 @@
                   "        pm.collectionVariables.set(\"cid\", comment.id);\r",
                   "        pm.collectionVariables.set(\"response\", comment)\r",
                   "    } catch(err) {\r",
-                  "        console.error(\"РћС€РёР±РєР° РїСЂРё РїРѕРґРіРѕС‚РѕРІРєРµ С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С….\", err);\r",
+                  "        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
                   "    }\r",
                   "};\r",
                   "\r",
@@ -1183,7 +1183,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"РћС‚РІРµС‚ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РєРѕРґ СЃС‚Р°С‚СѓСЃР° 200 Рё РґР°РЅРЅС‹Рµ РІ С„РѕСЂРјР°С‚Рµ json\", function () {\r",
+                  "pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
                   "    pm.response.to.be.ok\r",
                   "    pm.response.to.be.withBody;\r",
                   "    pm.response.to.be.json;\r",
@@ -1192,7 +1192,7 @@
                   "const source = pm.collectionVariables.get('response');\r",
                   "const target = pm.response.json();\r",
                   "\r",
-                  "pm.test(\"РљРѕРјРјРµРЅС‚Р°СЂРёР№ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РїРѕР»СЏ: id, comment\", function () {\r",
+                  "pm.test(\"Комментарий должен содержать поля: id, comment\", function () {\r",
                   "pm.expect(target).to.have.property('id');\r",
                   "pm.expect(target).to.have.property('comment');\r",
                   "pm.expect(target).to.have.property('eventId');\r",
@@ -1200,9 +1200,9 @@
                   "pm.expect(target).to.have.property('createdOn');\r",
                   "});\r",
                   "\r",
-                  "pm.test(\"Р”Р°РЅРЅС‹Рµ РІ РѕС‚РІРµС‚Рµ РґРѕР»Р¶РЅС‹ СЃРѕРѕС‚РІРµС‚СЃС‚РІРѕРІР°С‚СЊ РґР°РЅРЅС‹Рј РІ Р·Р°РїСЂРѕСЃРµ\", function () {\r",
+                  "pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
                   "    pm.expect(target.id).to.not.be.null;\r",
-                  "    pm.expect(source.comment).equal(target.comment, 'С‚РµРєСЃС‚ РєРѕРјРјРµРЅС‚Р° РґРѕР»Р¶РµРЅ СЃРѕРІРїР°РґР°С‚СЊ СЃ РѕС‚РїСЂР°РІР»РµРЅРЅС‹Рј');\r",
+                  "    pm.expect(source.comment).equal(target.comment, 'текст коммента должен совпадать с отправленным');\r",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -1251,7 +1251,7 @@
           "response": []
         },
         {
-          "name": "РџРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ РїРѕ СЃРѕР±С‹С‚РёСЋ",
+          "name": "Получение списка комментариев по событию",
           "event": [
             {
               "listen": "prerequest",
@@ -1274,7 +1274,7 @@
                   "        comment = await api.addComment(submittedUser.id, event.id, rnd.getComment());\r",
                   "        pm.collectionVariables.set(\"response\", comment)\r",
                   "    } catch(err) {\r",
-                  "        console.error(\"РћС€РёР±РєР° РїСЂРё РїРѕРґРіРѕС‚РѕРІРєРµ С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С….\", err);\r",
+                  "        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
                   "    }\r",
                   "};\r",
                   "\r",
@@ -1300,7 +1300,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"РћС‚РІРµС‚ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РєРѕРґ СЃС‚Р°С‚СѓСЃР° 200 Рё РґР°РЅРЅС‹Рµ РІ С„РѕСЂРјР°С‚Рµ json\", function () {\r",
+                  "pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
                   "    pm.response.to.be.ok\r",
                   "    pm.response.to.be.withBody;\r",
                   "    pm.response.to.be.json;\r",
@@ -1311,7 +1311,7 @@
                   "let founded;\r",
                   "target.forEach(function(element){if (element.id == source.id) founded = element});\r",
                   "\r",
-                  "pm.test(\"РљРѕРјРјРµРЅС‚Р°СЂРёР№ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РїРѕР»СЏ: id, comment\", function () {\r",
+                  "pm.test(\"Комментарий должен содержать поля: id, comment\", function () {\r",
                   "pm.expect(target[0]).to.have.property('id');\r",
                   "pm.expect(target[0]).to.have.property('comment');\r",
                   "pm.expect(target[0]).to.have.property('eventId');\r",
@@ -1319,9 +1319,9 @@
                   "pm.expect(target[0]).to.have.property('createdOn');\r",
                   "});\r",
                   "\r",
-                  "pm.test(\"Р”Р°РЅРЅС‹Рµ РІ РѕС‚РІРµС‚Рµ РґРѕР»Р¶РЅС‹ СЃРѕРѕС‚РІРµС‚СЃС‚РІРѕРІР°С‚СЊ РґР°РЅРЅС‹Рј РІ Р·Р°РїСЂРѕСЃРµ\", function () {\r",
-                  "    pm.expect(source.id).equal(founded.id, 'РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РєРѕРјРјРµРЅС‚Р° РґРѕР»Р¶РµРЅ СЃРѕРѕС‚РІРµС‚СЃС‚РІРѕРІР°С‚СЊ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂСѓ РєРѕРјРјРµРЅС‚Р° РґРѕР±Р°РІР»РµРЅРЅРѕuj СЂР°РЅРµРµ');\r",
-                  "    pm.expect(source.comment).equal(founded.comment, 'С‚РµРєСЃС‚ РєРѕРјРјРµРЅС‚Р° РґРѕР»Р¶РµРЅ СЃРѕРІРїР°РґР°С‚СЊ СЃ РѕС‚РїСЂР°РІР»РµРЅРЅС‹Рј');\r",
+                  "pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+                  "    pm.expect(source.id).equal(founded.id, 'Идентификатор коммента должен соответствовать идентификатору коммента добавленноuj ранее');\r",
+                  "    pm.expect(source.comment).equal(founded.comment, 'текст коммента должен совпадать с отправленным');\r",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -1370,7 +1370,7 @@
           "response": []
         },
         {
-          "name": "РџРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ РїРѕ СЃРѕР±С‹С‚РёСЋ СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЏРјРё С„РёР»СЊС‚СЂР°С†РёРё",
+          "name": "Получение списка комментариев по событию с возможностями фильтрации",
           "event": [
             {
               "listen": "prerequest",
@@ -1395,7 +1395,7 @@
                   "        pm.request.removeQueryParams(['userIds']);\r",
                   "        pm.request.addQueryParams([`userIds=` + submittedUser.id]);\r",
                   "    } catch(err) {\r",
-                  "        console.error(\"РћС€РёР±РєР° РїСЂРё РїРѕРґРіРѕС‚РѕРІРєРµ С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С….\", err);\r",
+                  "        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
                   "    }\r",
                   "};\r",
                   "\r",
@@ -1421,7 +1421,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"РћС‚РІРµС‚ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РєРѕРґ СЃС‚Р°С‚СѓСЃР° 200 Рё РґР°РЅРЅС‹Рµ РІ С„РѕСЂРјР°С‚Рµ json\", function () {\r",
+                  "pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
                   "    pm.response.to.be.ok\r",
                   "    pm.response.to.be.withBody;\r",
                   "    pm.response.to.be.json;\r",
@@ -1432,7 +1432,7 @@
                   "let founded;\r",
                   "target.forEach(function(element){if (element.id == source.id) founded = element});\r",
                   "\r",
-                  "pm.test(\"РљРѕРјРјРµРЅС‚Р°СЂРёР№ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РїРѕР»СЏ: id, comment\", function () {\r",
+                  "pm.test(\"Комментарий должен содержать поля: id, comment\", function () {\r",
                   "pm.expect(target[0]).to.have.property('id');\r",
                   "pm.expect(target[0]).to.have.property('comment');\r",
                   "pm.expect(target[0]).to.have.property('eventId');\r",
@@ -1440,9 +1440,9 @@
                   "pm.expect(target[0]).to.have.property('createdOn');\r",
                   "});\r",
                   "\r",
-                  "pm.test(\"Р”Р°РЅРЅС‹Рµ РІ РѕС‚РІРµС‚Рµ РґРѕР»Р¶РЅС‹ СЃРѕРѕС‚РІРµС‚СЃС‚РІРѕРІР°С‚СЊ РґР°РЅРЅС‹Рј РІ Р·Р°РїСЂРѕСЃРµ\", function () {\r",
-                  "    pm.expect(source.id).equal(founded.id, 'РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РєРѕРјРјРµРЅС‚Р° РґРѕР»Р¶РµРЅ СЃРѕРѕС‚РІРµС‚СЃС‚РІРѕРІР°С‚СЊ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂСѓ РєРѕРјРјРµРЅС‚Р° РґРѕР±Р°РІР»РµРЅРЅРѕuj СЂР°РЅРµРµ');\r",
-                  "    pm.expect(source.comment).equal(founded.comment, 'С‚РµРєСЃС‚ РєРѕРјРјРµРЅС‚Р° РґРѕР»Р¶РµРЅ СЃРѕРІРїР°РґР°С‚СЊ СЃ РѕС‚РїСЂР°РІР»РµРЅРЅС‹Рј');\r",
+                  "pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+                  "    pm.expect(source.id).equal(founded.id, 'Идентификатор коммента должен соответствовать идентификатору коммента добавленноuj ранее');\r",
+                  "    pm.expect(source.comment).equal(founded.comment, 'текст коммента должен совпадать с отправленным');\r",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -1513,7 +1513,7 @@
           "response": []
         },
         {
-          "name": "РЈРґР°Р»РµРЅРёРµ РєРѕРјРјРµРЅС‚Р°",
+          "name": "Удаление коммента",
           "event": [
             {
               "listen": "prerequest",
@@ -1538,7 +1538,7 @@
                   "        pm.collectionVariables.set(\"cid\", comment.id);\r",
                   "        pm.collectionVariables.set(\"response\", comment)\r",
                   "    } catch(err) {\r",
-                  "        console.error(\"РћС€РёР±РєР° РїСЂРё РїРѕРґРіРѕС‚РѕРІРєРµ С‚РµСЃС‚РѕРІС‹С… РґР°РЅРЅС‹С….\", err);\r",
+                  "        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
                   "    }\r",
                   "};\r",
                   "\r",
@@ -1564,22 +1564,22 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"РћС‚РІРµС‚ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РєРѕРґ СЃС‚Р°С‚СѓСЃР° 204\", function () {\r",
+                  "pm.test(\"Ответ должен содержать код статуса 204\", function () {\r",
                   "    pm.response.to.have.status(204);\r",
                   "});\r",
                   "\r",
                   "source = pm.collectionVariables.get('response');\r",
                   "cid = pm.collectionVariables.get('cid');\r",
                   "\r",
-                  "pm.test(\"РљРѕРјРјРµРЅС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РЅР°Р№РґРµРЅ РґРѕ СѓРґР°Р»РµРЅРёСЏ\", function () {\r",
-                  "    pm.expect(source.id).equal(cid, 'РРґРµРЅС‚РёС„РёРєС‚РѕСЂ РєРѕРјРјРµРЅС‚Р° РґРѕР»Р¶РµРЅ СЃРѕРІРїР°РґР°С‚СЊ СЃ СѓРґР°Р»СЏРµРјС‹Рј');\r",
+                  "pm.test(\"Коммент должен быть найден до удаления\", function () {\r",
+                  "    pm.expect(source.id).equal(cid, 'Идентификтор коммента должен совпадать с удаляемым');\r",
                   "});\r",
                   "\r",
                   "pm.sendRequest({\r",
                   "            url: pm.collectionVariables.get(\"baseUrl\") + \"/events/comments/\" + cid,\r",
                   "            method: 'GET',\r",
                   "        }, (error, response) => {\r",
-                  "            pm.test(\"РєРѕРјРјРµРЅС‚ РЅРµ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РЅР°Р№РґРµРЅ РїРѕСЃР»Рµ СѓРґР°Р»РµРЅРёСЏ\", function () {\r",
+                  "            pm.test(\"коммент не должен быть найден после удаления\", function () {\r",
                   "                pm.expect(response.code).to.eql(404);\r",
                   "            });\r",
                   "        });\r",
@@ -1650,70 +1650,70 @@
           "    }",
           "",
           "    async addUser(user, verbose=null) {",
-          "        return this.post(\"/admin/users\", user, \"РћС€РёР±РєР° РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё РЅРѕРІРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ: \", verbose);",
+          "        return this.post(\"/admin/users\", user, \"Ошибка при добавлении нового пользователя: \", verbose);",
           "    }",
           "",
           "    async addCategory(category, verbose=null) {",
-          "        return this.post(\"/admin/categories\", category, \"РћС€РёР±РєР° РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё РЅРѕРІРѕР№ РєР°С‚РµРіРѕСЂРёРё: \", verbose);",
+          "        return this.post(\"/admin/categories\", category, \"Ошибка при добавлении новой категории: \", verbose);",
           "    }",
           "",
           "    async addComment(userId, eventId, comment, verbose=null) {",
-          "        return this.post(\"/users/\"+userId+\"/events/\"+eventId+\"/comments\", comment, \"РћС€РёР±РєР° РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё РЅРѕРІРѕРіРѕ РєРѕРјРјРµРЅС‚Р°: \", verbose);",
+          "        return this.post(\"/users/\"+userId+\"/events/\"+eventId+\"/comments\", comment, \"Ошибка при добавлении нового коммента: \", verbose);",
           "    }",
           "",
           "    async addEvent(userId, event, verbose=null) {",
-          "        return this.post(\"/users/\" + userId + \"/events\", event, \"РћС€РёР±РєР° РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё РЅРѕРІРѕРіРѕ СЃРѕР±С‹С‚РёСЏ: \", verbose);",
+          "        return this.post(\"/users/\" + userId + \"/events\", event, \"Ошибка при добавлении нового события: \", verbose);",
           "    }",
           "",
           "    async addCompilation(compilation, verbose=null) {",
-          "        return this.post(\"/admin/compilations\", compilation, \"РћС€РёР±РєР° РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё РЅРѕРІРѕР№ РїРѕРґР±РѕСЂРєРё: \", verbose);",
+          "        return this.post(\"/admin/compilations\", compilation, \"Ошибка при добавлении новой подборки: \", verbose);",
           "    }",
           "",
           "    async publishParticipationRequest(eventId, userId, verbose=null) {",
-          "        return this.post('/users/' + userId + '/requests?eventId=' + eventId, null, \"РћС€РёР±РєР° РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё РЅРѕРІРѕРіРѕ Р·Р°РїСЂРѕСЃР° РЅР° СѓС‡Р°СЃС‚РёРµ РІ СЃРѕР±С‹С‚РёРё\", verbose);",
+          "        return this.post('/users/' + userId + '/requests?eventId=' + eventId, null, \"Ошибка при добавлении нового запроса на участие в событии\", verbose);",
           "    }",
           "",
           "    async publishEvent(eventId, verbose=null) {",
-          "        return this.patch('/admin/events/' + eventId, {stateAction: \"PUBLISH_EVENT\"}, \"РћС€РёР±РєР° РїСЂРё РїСѓР±Р»РёРєР°С†РёРё СЃРѕР±С‹С‚РёСЏ\", verbose);",
+          "        return this.patch('/admin/events/' + eventId, {stateAction: \"PUBLISH_EVENT\"}, \"Ошибка при публикации события\", verbose);",
           "    }",
           "    ",
           "    async rejectEvent(eventId, verbose=null) {",
-          "        return this.patch('/admin/events/' + eventId, {stateAction: \"REJECT_EVENT\"}, \"РћС€РёР±РєР° РїСЂРё РѕС‚РјРµРЅРµ СЃРѕР±С‹С‚РёСЏ\", verbose);",
+          "        return this.patch('/admin/events/' + eventId, {stateAction: \"REJECT_EVENT\"}, \"Ошибка при отмене события\", verbose);",
           "    }",
           "",
           "    async acceptParticipationRequest(eventId, userId, reqId, verbose=null) {",
-          "        return this.patch('/users/' + userId + '/events/' + eventId + '/requests/', {requestIds:[reqId], status: \"CONFIRMED\"}, \"РћС€РёР±РєР° РїСЂРё РїСЂРёРЅСЏС‚РёРё Р·Р°СЏРІРєРё РЅР° СѓС‡Р°СЃС‚РёРµ РІ СЃРѕР±С‹С‚РёРё\", verbose);",
+          "        return this.patch('/users/' + userId + '/events/' + eventId + '/requests/', {requestIds:[reqId], status: \"CONFIRMED\"}, \"Ошибка при принятии заявки на участие в событии\", verbose);",
           "    }",
           "",
           "    async findCategory(catId, verbose=null) {",
-          "        return this.get('/categories/' + catId, null, \"РћС€РёР±РєР° РїСЂРё РїРѕРёСЃРєРµ РєР°С‚РµРіРѕСЂРёРё РїРѕ id\", verbose);",
+          "        return this.get('/categories/' + catId, null, \"Ошибка при поиске категории по id\", verbose);",
           "    }",
           "",
           "    async findCompilation(compId, verbose=null) {",
-          "        return this.get('/compilations/' + compId, null, \"РћС€РёР±РєР° РїСЂРё РїРѕРёСЃРєРµ РїРѕРґР±РѕСЂРєРё РїРѕ id\", verbose);",
+          "        return this.get('/compilations/' + compId, null, \"Ошибка при поиске подборки по id\", verbose);",
           "    }",
           "",
           "    async findEvent(eventId, verbose=null) {",
-          "        return this.get('/events/' + eventId, null, \"РћС€РёР±РєР° РїСЂРё РїРѕРёСЃРєРµ СЃРѕР±С‹С‚РёСЏ РїРѕ id\", verbose);",
+          "        return this.get('/events/' + eventId, null, \"Ошибка при поиске события по id\", verbose);",
           "    }",
           "",
           "    async findUser(userId, verbose=null) {",
-          "        return this.get('/admin/users?ids=' + userId, null, \"РћС€РёР±РєР° РїСЂРё РїРѕРёСЃРєРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ id\", verbose);",
+          "        return this.get('/admin/users?ids=' + userId, null, \"Ошибка при поиске пользователя по id\", verbose);",
           "    }",
           "",
-          "    async post(path, body, errorText = \"РћС€РёР±РєР° РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё post-Р·Р°РїСЂРѕСЃР°: \", verbose=null) {",
+          "    async post(path, body, errorText = \"Ошибка при выполнении post-запроса: \", verbose=null) {",
           "        return this.sendRequest(\"POST\", path, body, errorText, verbose);",
           "    }",
           "",
-          "    async patch(path, body = null, errorText = \"РћС€РёР±РєР° РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё patch-Р·Р°РїСЂРѕСЃР°: \", verbose=null) {",
+          "    async patch(path, body = null, errorText = \"Ошибка при выполнении patch-запроса: \", verbose=null) {",
           "        return this.sendRequest(\"PATCH\", path, body, errorText, verbose);",
           "    }",
           "",
-          "    async get(path, body = null, errorText = \"РћС€РёР±РєР° РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё get-Р·Р°РїСЂРѕСЃР°: \", verbose=null) {",
+          "    async get(path, body = null, errorText = \"Ошибка при выполнении get-запроса: \", verbose=null) {",
           "        return this.sendRequest(\"GET\", path, body, errorText, verbose);",
           "    }",
           "",
-          "    async sendRequest(method, path, body=null, errorText = \"РћС€РёР±РєР° РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё Р·Р°РїСЂРѕСЃР°: \", verbose=null) {",
+          "    async sendRequest(method, path, body=null, errorText = \"Ошибка при выполнении запроса: \", verbose=null) {",
           "        return new Promise((resolve, reject) => {",
           "            verbose = verbose == null ? this._verbose : verbose;",
           "",
@@ -1725,22 +1725,22 @@
           "            };",
           "",
           "            if(verbose) {",
-          "                console.log(\"РћС‚РїСЂР°РІР»СЏСЋ Р·Р°РїСЂРѕСЃ: \", request);",
+          "                console.log(\"Отправляю запрос: \", request);",
           "            }",
           "",
           "            try {",
           "                this.pm.sendRequest(request, (error, response) => {",
           "                    if(error || (response.code >= 400 && response.code <= 599)) {",
           "                        let err = error ? error : JSON.stringify(response.json());",
-          "                        console.error(\"РџСЂРё РІС‹РїРѕР»РЅРµРЅРёРё Р·Р°РїСЂРѕСЃР° Рє СЃРµСЂРІРµСЂСѓ РІРѕР·РЅРёРєР»Р° РѕС€РёРєР°.\\n\", err,",
-          "                             \"\\nР”Р»СЏ РѕС‚Р»Р°РґРєРё РїСЂРѕР±Р»РµРјС‹ РїРѕРІС‚РѕСЂРёС‚Рµ С‚Р°РєРѕР№ Р¶Рµ Р·Р°РїСЂРѕСЃ Рє РІР°С€РµР№ РїСЂРѕРіСЂР°РјРјРµ \" + ",
-          "                             \"РЅР° Р»РѕРєР°Р»СЊРЅРѕРј РєРѕРјРїСЊСЋС‚РµСЂРµ. Р”Р°РЅРЅС‹Рµ Р·Р°РїСЂРѕСЃР°:\\n\", JSON.stringify(request));",
+          "                        console.error(\"При выполнении запроса к серверу возникла ошика.\\n\", err,",
+          "                             \"\\nДля отладки проблемы повторите такой же запрос к вашей программе \" + ",
+          "                             \"на локальном компьютере. Данные запроса:\\n\", JSON.stringify(request));",
           "",
           "                        reject(new Error(errorText + err));",
           "                    }",
           "",
           "                    if(verbose) {",
-          "                        console.log(\"Р РµР·СѓР»СЊС‚Р°С‚ РѕР±СЂР°Р±РѕС‚РєРё Р·Р°РїСЂРѕСЃР°: РєРѕРґ СЃРѕСЃС‚РѕСЏРЅРёСЏ - \", response.code, \", С‚РµР»Рѕ: \", response.json());",
+          "                        console.log(\"Результат обработки запроса: код состояния - \", response.code, \", тело: \", response.json());",
           "                    }",
           "",
           "                    resolve(response.json());",
