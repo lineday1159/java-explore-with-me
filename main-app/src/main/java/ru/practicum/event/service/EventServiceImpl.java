@@ -205,6 +205,7 @@ public class EventServiceImpl implements EventService {
                 "Event with id=" + eventId + " was not found", "The required object was not found."));
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(
                 "User with id=" + userId + " was not found", "The required object was not found."));
+
         if (!event.getInitiator().getId().equals(user.getId())) {
             throw new NotFoundException("Event with id=" + eventId + " was not found",
                     "The required object was not found.");
