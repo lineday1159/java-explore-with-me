@@ -23,7 +23,7 @@ import java.util.List;
 @Slf4j
 public class CommentController {
 
-    private final static String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private final CommentService commentService;
 
     @PostMapping("/users/{userId}/events/{eventId}/comments")
