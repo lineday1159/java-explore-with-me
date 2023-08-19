@@ -78,6 +78,7 @@ create TABLE IF NOT EXISTS event_comments (
   user_id BIGINT references users(id) ON DELETE CASCADE NOT NULL,
   comment VARCHAR(2000) NOT NULL,
   created_on TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+  changed_on TIMESTAMP WITHOUT TIME ZONE NOT NULL,
   CONSTRAINT pk_event_comments PRIMARY KEY(id)
 );
 

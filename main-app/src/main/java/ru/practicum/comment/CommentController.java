@@ -8,12 +8,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.comment.dto.CommentDto;
 import ru.practicum.comment.dto.NewCommentDto;
-import ru.practicum.comment.dto.UpdateCommentDto;
 import ru.practicum.comment.service.CommentService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,9 +38,9 @@ public class CommentController {
     @PatchMapping("/users/{userId}/events/comments/{commentId}")
     public CommentDto patch(@PathVariable Long userId,
                             @PathVariable Long commentId,
-                            @RequestBody @Valid UpdateCommentDto updateCommentDto) {
-        log.info("Patch запрос на обновление коммента - {} от user - {}: {}", commentId, userId, updateCommentDto);
-        return commentService.update(updateCommentDto, userId, commentId);
+                            @RequestBody @Valid NewCommentDto newCommentDto) {
+        log.info("Patch запрос на обновление коммента - {} от user - {}: {}", commentId, userId, newCommentDto);
+        return commentService.patch(newCommentDto, userId, commentId);
     }
 
     @DeleteMapping("/users/{userId}/events/comments/{commentId}")
@@ -66,5 +66,19 @@ public class CommentController {
                                     @RequestParam(defaultValue = "10") @Positive int size) {
         log.info("Get запрос на получение списка комментов по event - {}", eventId);
         return commentService.getList(eventId, userIds, rangeStart, rangeEnd, from, size);
+    }
+
+    @PatchMapping("/admin/events/comments/{commentId}")
+    public CommentDto patchByAdmin(@PathVariable Long commentId,
+                                   @RequestBody @Valid NewCommentDto newCommentDto) throws ParseException {
+        log.info("Patch запрос на обновление комментария - {}", newCommentDto);
+        return commentService.patchByAdmin(newCommentDto, commentId);
+    }
+
+    @DeleteMapping("/admin/events/comments/{commentId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteByAdmin(@PathVariable Long commentId) {
+        log.info("Delete запрос на удаление коммента - {}", commentId);
+        commentService.deleteByAdmin(commentId);
     }
 }

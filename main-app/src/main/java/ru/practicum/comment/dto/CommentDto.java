@@ -14,4 +14,5 @@ public class CommentDto {
     private UserShortDto user;
     private String comment;
     private String createdOn;
+    private String changedOn;
 }

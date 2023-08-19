@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.comment.dto.CommentDto;
 import ru.practicum.comment.dto.NewCommentDto;
-import ru.practicum.comment.dto.UpdateCommentDto;
 import ru.practicum.comment.mapper.CommentMapper;
 import ru.practicum.comment.model.Comment;
 import ru.practicum.comment.repository.CommentRepository;
@@ -17,8 +16,6 @@ import ru.practicum.error.NotFoundException;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.EventState;
 import ru.practicum.event.repository.EventRepository;
-import ru.practicum.request.model.ParticipationRequest;
-import ru.practicum.request.model.RequestState;
 import ru.practicum.request.repository.RequestRepository;
 import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
@@ -48,15 +45,6 @@ public class CommentServiceImpl implements CommentService {
             throw new ConflictException(
                     "Event with id=" + eventId + " must be published", "The comment can not be published.");
         }
-        ParticipationRequest request = requestRepository.findByRequesterIdAndEventId(userId, eventId);
-        if (request == null) {
-            throw new ConflictException(
-                    "User with id=" + userId + " must be a participant", "The comment can not be published.");
-        }
-        if (!request.getStatus().equals(RequestState.CONFIRMED)) {
-            throw new ConflictException(
-                    "User with id=" + userId + " must be a participant", "The comment can not be published.");
-        }
 
         Comment comment = commentRepository.save(CommentMapper.newCommentDtoToComment(newCommentDto, user, event));
         return CommentMapper.commentToCommentDto(comment);
@@ -64,7 +52,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentDto update(UpdateCommentDto updateCommentDto, Long userId, Long commentId) {
+    public CommentDto patch(NewCommentDto newCommentDto, Long userId, Long commentId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(
                 "User with id=" + userId + " was not found", "The required object was not found."));
         Comment comment = commentRepository.findById(commentId)
@@ -78,8 +66,9 @@ public class CommentServiceImpl implements CommentService {
             throw new ConflictException(
                     "Comment with id=" + commentId + " was created more than 1 hour ago", "The comment can not be edited.");
         }
-        if (!comment.getComment().equals(updateCommentDto.getComment())) {
-            comment.setComment(updateCommentDto.getComment());
+        if (!comment.getComment().equals(newCommentDto.getComment())) {
+            comment.setComment(newCommentDto.getComment());
+            comment.setChangedOn(LocalDateTime.now());
             comment = commentRepository.save(comment);
         }
         return CommentMapper.commentToCommentDto(comment);
@@ -120,5 +109,30 @@ public class CommentServiceImpl implements CommentService {
         return CommentMapper.commentsToCommentsDto(commentRepository.search(eventId,
                 Optional.ofNullable(userIds), Optional.ofNullable(rangeStart),
                 Optional.ofNullable(rangeEnd), pageable));
+    }
+
+    @Override
+    @Transactional
+    public CommentDto patchByAdmin(NewCommentDto newCommentDto, Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException("Comment with id=" + commentId + " was not found",
+                        "The required object was not found."));
+
+        if (!comment.getComment().equals(newCommentDto.getComment())) {
+            comment.setComment(newCommentDto.getComment());
+            comment.setChangedOn(LocalDateTime.now());
+            comment = commentRepository.save(comment);
+        }
+        return CommentMapper.commentToCommentDto(comment);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByAdmin(Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException("Comment with id=" + commentId + " was not found",
+                        "The required object was not found."));
+
+        commentRepository.deleteById(commentId);
     }
 }

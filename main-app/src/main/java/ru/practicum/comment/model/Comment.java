@@ -30,4 +30,6 @@ public class Comment {
     private String comment;
     @Column(name = "created_on")
     private LocalDateTime createdOn;
+    @Column(name = "changed_on")
+    private LocalDateTime changedOn;
 }
