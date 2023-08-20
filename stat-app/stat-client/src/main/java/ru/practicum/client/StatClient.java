@@ -9,9 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.dto.StatDto;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @Service
@@ -19,9 +18,8 @@ import java.util.Map;
 public class StatClient extends BaseClient {
     private static final String API_PREFIX_HIT = "/hit";
     private static final String API_PREFIX_STATS = "/stats";
-    private static final String API_PREFIX_STATS_COUNT = "/statsCount";
-    private static final String dateFormat = "yyyy-MM-dd HH:mm:ss";
-    private static final DateFormat dateFormatter = new SimpleDateFormat(dateFormat);
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
 
     public StatClient(@Value("${state-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(builder
@@ -31,10 +29,10 @@ public class StatClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> getStats(Date start, Date end, String[] uris, Boolean unique) {
+    public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, String[] uris, Boolean unique) {
         Map<String, Object> parameters = Map.of(
-                "start", dateFormatter.format(start),
-                "end", dateFormatter.format(end),
+                "start", start.format(dateTimeFormatter),
+                "end", end.format(dateTimeFormatter),
                 "uris", uris,
                 "unique", unique
         );

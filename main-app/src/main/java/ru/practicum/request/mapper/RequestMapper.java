@@ -3,18 +3,16 @@ package ru.practicum.request.mapper;
 import ru.practicum.request.dto.ParticipationRequestDto;
 import ru.practicum.request.model.ParticipationRequest;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RequestMapper {
-    private static final String dateFormat = "yyyy-MM-dd HH:mm:ss";
-    private static final DateFormat dateFormatter = new SimpleDateFormat(dateFormat);
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static ParticipationRequestDto requestToRequestDto(ParticipationRequest request) throws ParseException {
-        return new ParticipationRequestDto(request.getId(), dateFormatter.format(request.getCreatedOn()),
+        return new ParticipationRequestDto(request.getId(), request.getCreatedOn().format(dateTimeFormatter),
                 request.getRequester().getId(), request.getEvent().getId(), request.getStatus());
     }
 

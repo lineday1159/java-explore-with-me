@@ -5,7 +5,7 @@ import ru.practicum.category.model.Category;
 import ru.practicum.user.model.User;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -29,11 +29,11 @@ public class Event {
     @Column(nullable = false)
     private String description;
     @Column(nullable = false, name = "event_date")
-    private Date eventDate;
+    private LocalDateTime eventDate;
     @Column(nullable = false, name = "created_on")
-    private Date createdOn;
+    private LocalDateTime createdOn;
     @Column(nullable = false, name = "published_on")
-    private Date publishedOn;
+    private LocalDateTime publishedOn;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
     @ToString.Exclude

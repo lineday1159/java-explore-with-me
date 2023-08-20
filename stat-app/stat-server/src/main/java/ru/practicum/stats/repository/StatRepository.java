@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.dto.ViewStats;
 import ru.practicum.model.Stat;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -18,8 +18,8 @@ public interface StatRepository extends JpaRepository<Stat, Long> {
             "and (s.uri in :uris or :uris is null) " +
             "group by s.app, s.uri " +
             "order by hits desc", nativeQuery = true)
-    List<ViewStats> search(@Param("startDate") Date start,
-                           @Param("endDate") Date end,
+    List<ViewStats> search(@Param("startDate") LocalDateTime start,
+                           @Param("endDate") LocalDateTime end,
                            @Param("uris") List<String> uris);
 
     @Query(value = "select s.app as app, s.uri as uri, count(*) as hits " +
@@ -28,8 +28,8 @@ public interface StatRepository extends JpaRepository<Stat, Long> {
             "and (s.uri in :uris or :uris is null)) as s " +
             "group by s.app, s.uri " +
             "order by hits desc", nativeQuery = true)
-    List<ViewStats> searchUnique(@Param("startDate") Date start,
-                                 @Param("endDate") Date end,
+    List<ViewStats> searchUnique(@Param("startDate") LocalDateTime start,
+                                 @Param("endDate") LocalDateTime end,
                                  @Param("uris") List<String> uris);
 
     @Query(value = "select count(*) " +

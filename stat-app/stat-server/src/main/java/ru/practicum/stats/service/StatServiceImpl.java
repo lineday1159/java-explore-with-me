@@ -9,6 +9,7 @@ import ru.practicum.dto.ViewStats;
 import ru.practicum.mapper.StatMapper;
 import ru.practicum.stats.repository.StatRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,8 +28,8 @@ public class StatServiceImpl implements StatService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ViewStats> get(Date start, Date end, List<String> uris, Boolean unique) {
-        if (end.before(start)) {
+    public List<ViewStats> get(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+        if (end.isBefore(start)) {
             throw new RuntimeException("start date must be before end date");
         }
         if (unique) {
