@@ -951,6 +951,7 @@
                   "pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
                   "    pm.expect(target.id).to.not.be.null;\r",
                   "    pm.expect(source.comment).equal(target.comment, 'текст коммента должен совпадать с отправленным');\r",
+                  "    pm.expect(target.changedOn).to.be.null;\r",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -1080,6 +1081,7 @@
                   "pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
                   "    pm.expect(target.id).to.not.be.null;\r",
                   "    pm.expect(source.comment).equal(target.comment, 'текст коммента должен совпадать с отправленным');\r",
+                  "    pm.expect(target.changedOn).to.not.be.null;\r",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -1206,6 +1208,7 @@
                   "pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
                   "    pm.expect(target.id).to.not.be.null;\r",
                   "    pm.expect(source.comment).equal(target.comment, 'текст коммента должен совпадать с отправленным');\r",
+                  "    pm.expect(target.changedOn).to.not.be.null;\r",
                   "});"
                 ],
                 "type": "text/javascript"
